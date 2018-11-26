@@ -3,6 +3,7 @@ package io;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Arrays;
 
 /**
  * Created by Robert on 8/5/2017.
@@ -14,15 +15,20 @@ public class EncodedOutputStream {
 		this.out = out;
 	}
 
+	/**
+	 * Writes a packet with a string header.
+	 *
+	 * @param header
+	 * @param data
+	 * @throws IOException if the underlying outputstream errors
+	 */
 	public void writeWarn(String header, byte[]... data) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 		out.write(Util.toBytes(header.length()));
 		out.write(header.getBytes());
-		int tot = 0;
-		for (byte[] aData : data) {
-			tot += aData.length;
-		}
+
+		int tot = Arrays.stream(data).mapToInt(arr -> arr.length).sum();
 		out.write(Util.toBytes(tot));
 
 		for (byte[] aData : data) {
@@ -32,9 +38,16 @@ public class EncodedOutputStream {
 		this.out.write(out.toByteArray());
 	}
 
-	public void write(String h, byte[]... data) {
+	/**
+	 * Same as {@link #write(String, byte[]...)} except that IOExceptions are
+	 * silenced.
+	 * 
+	 * @param header
+	 * @param data
+	 */
+	public void write(String header, byte[]... data) {
 		try {
-			writeWarn(h, data);
+			writeWarn(header, data);
 		} catch (IOException ignored) {
 		}
 	}

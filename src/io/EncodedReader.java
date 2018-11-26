@@ -17,22 +17,43 @@ public class EncodedReader implements Runnable {
 		this.in = in;
 	}
 
+	/**
+	 * Reads in the next integer from {@link #in}.
+	 * 
+	 * @return the next integer
+	 * @throws IOException
+	 */
+	public int readInt() throws IOException {
+		byte[] lenBuffer = new byte[4];
+		in.read(lenBuffer);
+
+		return Util.toInt(lenBuffer);
+	}
+
+	/**
+	 * Reads in the next string with certain length from {@link #in}.
+	 * 
+	 * @param len length of string
+	 * @return string read
+	 * @throws IOException
+	 */
+	public String readStr(int len) throws IOException {
+		byte[] buffer = new byte[len];
+		in.read(buffer);
+
+		return new String(buffer);
+	}
+
 	@Override
 	public void run() {
 		boolean running = true;
 		while (running) {
 			try {
 				if (in.available() > 7) {
-					byte[] lenBuffer = new byte[4];
-					in.read(lenBuffer);
 
-					int headerLen = Util.toInt(lenBuffer);
-					byte[] headerArr = new byte[headerLen];
-					in.read(headerArr);
-					String header = new String(headerArr);
-
-					in.read(lenBuffer);
-					int length = Util.toInt(lenBuffer);
+					int headerLen = readInt();
+					String header = readStr(headerLen);
+					int length = readInt();
 
 					ByteArrayOutputStream out = new ByteArrayOutputStream(length);
 					byte[] buffer = new byte[1024];
@@ -44,8 +65,6 @@ public class EncodedReader implements Runnable {
 						if (in.available() >= buffer.length) {
 							out.write(buffer, 0, in.read(buffer));
 						}
-
-						Thread.sleep(10);
 					}
 					byte[] data = out.toByteArray();
 
@@ -54,29 +73,23 @@ public class EncodedReader implements Runnable {
 							pl.packet(header, data);
 					}
 				} else {
-					Thread.sleep(50);
+					Thread.sleep(10);
 				}
 			} catch (IOException ie1) {
-				try {
-					in.close();
-					running = false;
-				} catch (IOException ignored) {
-				}
-			} catch (Exception e) {
+				// Socket disconnected
+				running = false;
+				ie1.printStackTrace();
+			} catch (InterruptedException e) {
 				e.printStackTrace();
-				resetStream();
 			}
 		}
 	}
 
-	private void resetStream() {
-		try {
-			while (in.available() > 0)
-				in.skip(in.available());
-		} catch (IOException ignored) {
-		}
-	}
-
+	/**
+	 * Add a listener to receive updates.
+	 * 
+	 * @param pl listener to add
+	 */
 	public void addListener(PacketListener pl) {
 		synchronized (listeners) {
 			listeners.add(pl);
