@@ -9,12 +9,12 @@ public class ShipDataImpl implements ShipData {
 
 	@Override
 	public double getHitboxRadius() {
-		return 25;
+		return 5;
 	}
 
 	@Override
 	public double getRebound() {
-		return 0;
+		return 0.5;
 	}
 
 	@Override
