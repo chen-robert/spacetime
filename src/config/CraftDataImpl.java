@@ -1,6 +1,6 @@
 package config;
 
-public class ShipDataImpl implements ShipData {
+public class CraftDataImpl implements CraftData {
 
 	@Override
 	public String getName() {

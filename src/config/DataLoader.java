@@ -1,7 +1,7 @@
 package config;
 
 public class DataLoader {
-	public static ShipData getShipData(String name) {
-		return new ShipDataImpl();
+	public static CraftData getCraftData(String name) {
+		return new CraftDataImpl();
 	}
 }

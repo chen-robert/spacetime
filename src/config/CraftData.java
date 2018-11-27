@@ -1,6 +1,6 @@
 package config;
 
-public interface ShipData {
+public interface CraftData {
 	String getName();
 	
 	/**
