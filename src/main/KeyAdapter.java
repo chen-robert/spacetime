@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class KeyAdapter extends java.awt.event.KeyAdapter {
+	/**
+	 * Collection of all listeners to fire events to
+	 */
 	private final Collection<KeyListener> listeners = new ArrayList<>();
 
 	@Override
@@ -25,7 +28,13 @@ public class KeyAdapter extends java.awt.event.KeyAdapter {
 		}
 	}
 
-	public void addKeyListener(KeyListener listener) {
+	public void removeListener(KeyListener listener) {
+		synchronized (listeners) {
+			listeners.remove(listener);
+		}
+	}
+
+	public void addListener(KeyListener listener) {
 		synchronized (listeners) {
 			listeners.add(listener);
 		}
