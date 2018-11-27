@@ -12,6 +12,8 @@ public class UI extends JPanel {
 	private static final long serialVersionUID = 3279859667848651348L;
 
 	public static final Color BACKGROUND_COLOR = Color.WHITE;
+	public static final int SIDE_BUFFER = 20;
+	public static final int TOP_BANNER = 100;
 
 	private Game currentFrame;
 

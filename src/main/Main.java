@@ -16,7 +16,7 @@ public class Main {
 
 		UI ui = new UI();
 		ui.changeFrame(g);
-		ui.setPreferredSize(new Dimension(500, 500));
+		ui.setPreferredSize(new Dimension(480+2*UI.SIDE_BUFFER, 360+2*UI.SIDE_BUFFER+UI.TOP_BANNER));
 
 		frame.add(ui);
 		frame.pack();
