@@ -8,6 +8,8 @@ import game.Game;
 import ui.UI;
 
 public class Main {
+	public static final KeyAdapter KEY_ADAPTER = new KeyAdapter();
+
 	public static void main(String args[]) {
 		Game g = new Game();
 
@@ -16,12 +18,14 @@ public class Main {
 
 		UI ui = new UI();
 		ui.changeFrame(g);
-		ui.setPreferredSize(new Dimension(480+2*UI.SIDE_BUFFER, 360+2*UI.SIDE_BUFFER+UI.TOP_BANNER));
+		ui.setPreferredSize(new Dimension(480 + 2 * UI.SIDE_BUFFER, 360 + 2 * UI.SIDE_BUFFER + UI.TOP_BANNER));
 
 		frame.add(ui);
 		frame.pack();
 
 		frame.setVisible(true);
+
+		frame.addKeyListener(KEY_ADAPTER);
 
 		while (true) {
 			g.update();

@@ -22,7 +22,6 @@ public class ServerThread implements Runnable {
 		try {
 			ss = new ServerSocket(port);
 		} catch (IOException e) {
-			// e.printStackTrace();
 			return;
 		}
 
