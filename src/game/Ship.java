@@ -12,11 +12,10 @@ public class Ship implements Renderable {
 	 * 0 direction faces to the right, 90 faces up, goes counterclockwise
 	 */
 	private double direction;
-	private BufferedImage shipImage;
+	private BufferedImage craftImage;
 	@Override
 	public Image getImg() {
-		// TODO Auto-generated method stub
-		return null;
+		return craftImage;
 	}
 	@Override
 	public int getX() {
@@ -28,6 +27,14 @@ public class Ship implements Renderable {
 	}
 	@Override
 	public int getRenderPriority() {
-		return 0;
+		return 3;//can be changed later
+	}
+	@Override
+	public double getDirectionDegrees() {
+		return direction;
+	}
+	@Override
+	public double getDirectionRadians() {
+		return Math.toRadians(direction);
 	}
 }

@@ -27,6 +27,20 @@ public interface Renderable {
 	public int getY();
 
 	/**
+	 * gets the direction of the sprite. The default 0 angle faces to the right and 
+	 * further rotation moves it counterclockwise. 
+	 * 
+	 * @return direction rotated towards (0 to the right)
+	 */
+	public double getDirectionDegrees();
+	/**
+	 * Derp turns it into radians just in case
+	 * 
+	 * @return direction rotated towards (0 to the right) now in radians
+	 */
+	public double getDirectionRadians();
+	
+	/**
 	 * Returns priority for rendering. Higher priority items get rendered on top
 	 * (get rendered later). For example, background is probably low priority.
 	 * 

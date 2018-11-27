@@ -2,7 +2,9 @@ package ui;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.geom.AffineTransform;
 import java.util.PriorityQueue;
 
 import javax.swing.JPanel;
@@ -26,16 +28,23 @@ public class UI extends JPanel {
 	public void paintComponent(Graphics g) {
 		if (currentFrame == null)
 			return;
+		
+		Graphics2D g2d = (Graphics2D)g;//just for safety and more usable features
 
-		g.setColor(BACKGROUND_COLOR);
-		g.fillRect(0, 0, getWidth(), getHeight());
+		g2d.setColor(BACKGROUND_COLOR);
+		g2d.fillRect(0, 0, getWidth(), getHeight());
 
 		PriorityQueue<Renderable> items = new PriorityQueue<>((a, b) -> a.getRenderPriority() - b.getRenderPriority());
 		items.addAll(currentFrame.getRenderables());
 		for (Renderable item : items) {
 			Image sprite = item.getImg();
-			g.drawImage(sprite, item.getX() - sprite.getWidth(null) / 2, item.getY() - sprite.getHeight(null) / 2,
+			
+			//the following code should deal with rotated sprites.
+			g2d.translate(item.getX(), item.getY());
+			g2d.rotate(Math.toRadians(-item.getDirectionRadians()));
+			g2d.drawImage(sprite, 0 - sprite.getWidth(null) / 2, 0 - sprite.getHeight(null) / 2,
 					null);
+			g2d.setTransform(new AffineTransform());
 		}
 	}
 }
