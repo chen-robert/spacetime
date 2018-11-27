@@ -2,7 +2,7 @@ package ui;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.util.Collection;
+import java.util.PriorityQueue;
 
 import javax.swing.JPanel;
 
@@ -29,7 +29,9 @@ public class UI extends JPanel {
 		g.setColor(BACKGROUND_COLOR);
 		g.fillRect(0, 0, getWidth(), getHeight());
 
-		Collection<Renderable> items = currentFrame.getRenderables();
+		PriorityQueue<Renderable> items = new PriorityQueue<>((a, b) -> a.getRenderPriority() - b.getRenderPriority());
+		items.addAll(currentFrame.getRenderables());
+
 		for (Renderable item : items) {
 			g.drawImage(item.getImg(), item.getX(), item.getY(), null);
 		}
