@@ -1,7 +1,14 @@
 package config;
 
+import java.awt.image.BufferedImage;
+
 public interface CraftData {
 	String getName();
+	
+	/**
+	 * @return the image of said craft
+	 */
+	BufferedImage getImage();
 	
 	/**
 	 * @return radius of the circular hitbox
