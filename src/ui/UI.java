@@ -41,7 +41,7 @@ public class UI extends JPanel {
 			
 			//the following code should deal with rotated sprites.
 			g2d.translate(item.getX(), item.getY());
-			g2d.rotate(Math.toRadians(-item.getDirectionRadians()));
+			g2d.rotate(-item.getDirectionRadians());
 			g2d.drawImage(sprite, 0 - sprite.getWidth(null) / 2, 0 - sprite.getHeight(null) / 2,
 					null);
 			g2d.setTransform(new AffineTransform());
