@@ -30,7 +30,7 @@ public class ShipDataImpl implements ShipData {
 	}
 
 	@Override
-	public double getTurnSpeed() {
+	public double getTurnSpeedDeg() {
 		// TODO Auto-generated method stub
 		return 1;
 	}
