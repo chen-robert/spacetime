@@ -1,8 +1,7 @@
 package config;
 
-public class DataLoader{
-	public static ShipData getShipData(String name){
-		
-		//TODO
+public class DataLoader {
+	public static ShipData getShipData(String name) {
+		return new ShipDataImpl();
 	}
 }
