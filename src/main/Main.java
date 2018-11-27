@@ -10,7 +10,7 @@ import ui.UI;
 public class Main {
 	public static final KeyAdapter KEY_ADAPTER = new KeyAdapter();
 
-	public static void main(String args[]) {
+	public static void main(String args[]) throws InterruptedException {
 		Game g = new Game();
 
 		JFrame frame = new JFrame("Spacetime");
@@ -30,6 +30,8 @@ public class Main {
 		while (true) {
 			g.update();
 			ui.repaint();
+
+			Thread.sleep(20);
 		}
 	}
 }
