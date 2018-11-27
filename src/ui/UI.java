@@ -2,6 +2,7 @@ package ui;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.util.PriorityQueue;
 
 import javax.swing.JPanel;
@@ -31,9 +32,10 @@ public class UI extends JPanel {
 
 		PriorityQueue<Renderable> items = new PriorityQueue<>((a, b) -> a.getRenderPriority() - b.getRenderPriority());
 		items.addAll(currentFrame.getRenderables());
-
 		for (Renderable item : items) {
-			g.drawImage(item.getImg(), item.getX(), item.getY(), null);
+			Image sprite = item.getImg();
+			g.drawImage(sprite, item.getX() - sprite.getWidth(null) / 2, item.getY() - sprite.getHeight(null) / 2,
+					null);
 		}
 	}
 }
