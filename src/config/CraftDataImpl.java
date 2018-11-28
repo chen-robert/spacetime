@@ -19,7 +19,6 @@ public class CraftDataImpl implements CraftData {
 
 	@Override
 	public double getAcceleration() {
-		// TODO Auto-generated method stub
 		return 0.5;
 	}
 	
@@ -30,31 +29,26 @@ public class CraftDataImpl implements CraftData {
 
 	@Override
 	public double getMaxSpeed() {
-		// TODO Auto-generated method stub
 		return 10;
 	}
 
 	@Override
 	public double getTurnSpeed() {
-		// TODO Auto-generated method stub
 		return 2.5;
 	}
 
 	@Override
 	public int getMaxHP() {
-		// TODO Auto-generated method stub
 		return 10;
 	}
 
 	@Override
 	public double getDef() {
-		// TODO Auto-generated method stub
 		return 1;
 	}
 
 	@Override
 	public double getDamageMultiplier() {
-		// TODO Auto-generated method stub
 		return 1;
 	}
 
