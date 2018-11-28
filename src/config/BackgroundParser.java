@@ -52,7 +52,7 @@ public class BackgroundParser {
 
 	public static boolean[][] getBackgroundCollisions(int width, int height) {
 		BufferedImage copy = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		copy.getGraphics().drawImage(test, 0, 0, null);
+		copy.getGraphics().drawImage(test, 0, 0, width, height, null);
 
 		boolean[][] ret = new boolean[width][height];
 		for (int i = 0; i < width; i++) {
