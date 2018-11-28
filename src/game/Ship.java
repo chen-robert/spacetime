@@ -16,8 +16,9 @@ public class Ship implements Renderable {
 		craftdata = cd;
 		shipX = 10;
 		shipY = 10;
+		hitArray = BackgroundParser.getBackgroundCollisions(480, 360);
 	}
-	
+	private boolean[][] hitArray;
 	private double shipX;
 	private double shipY;
 	//these values are the X and Y components of the ship's current velocity vector
@@ -97,39 +98,6 @@ public class Ship implements Renderable {
 	
 	//TODO: Once we've detected collisions, actually do something with them
 	public void collide() {
-		boolean foundCollision = false;
-		for (int angleIterator = 0; angleIterator < 30; angleIterator++) {
-			System.out.println("heyoo");
-			double testX = shipX + craftdata.getHitboxRadius() * Math.cos(12 * angleIterator);
-			double testY = shipY - craftdata.getHitboxRadius() * Math.sin(12 * angleIterator);
-			if (BackgroundParser.getBackgroundCollisions(480, 360)[(int)testX][(int)testY]) {
-				foundCollision = true;
-				break;
-			}
-		}
-		
-		if (foundCollision) {
-			//we know there is a collision; now we put algorithm into action!
-			int count = 0;//there had better be at least one considering we found one -_-
-			int anglesum = 0;
-			for (int angleIterator = 0; angleIterator < 60; angleIterator++) {
-				for (int radiusShift = 0; radiusShift < 5; radiusShift++) {
-					if (BackgroundParser.getBackgroundCollisions(480, 360)
-							[(int)(shipX + (craftdata.getHitboxRadius() + 0.5 * radiusShift) * 
-							Math.cos(6 * angleIterator))]
-							[(int)(shipY + (craftdata.getHitboxRadius() - 0.5 * radiusShift) * 
-							Math.sin(6 * angleIterator))]) {//holy crap that was hard
-						count++;
-						anglesum += 6 * angleIterator;
-					}
-				}
-			}
-			/**
-			 * this is now our estimate for the normal of the surface
-			 */
-			double reflectEstimate = anglesum/count;
-		}
-		
 		//TOP
 		if (shipY - craftdata.getHitboxRadius() < 0) {
 			shipY = 2 * craftdata.getHitboxRadius() - shipY;
@@ -157,6 +125,38 @@ public class Ship implements Renderable {
 			shipX = 2 * UI.FIELD_WIDTH - 2 * craftdata.getHitboxRadius() - shipX;
 			velocityX *= -1 * craftdata.getRebound();
 			velocityY *= craftdata.getRebound();
+		}
+		
+		
+		
+		boolean foundCollision = false;
+		for (int angleIterator = 0; angleIterator < 30; angleIterator++) {
+			double testX = shipX + craftdata.getHitboxRadius() * Math.cos(12 * angleIterator);
+			double testY = shipY - craftdata.getHitboxRadius() * Math.sin(12 * angleIterator);
+			if (hitArray[(int)testX][(int)testY]) {
+				foundCollision = true;
+				break;
+			}
+		}
+		
+		if (foundCollision) {
+			//we know there is a collision; now we put algorithm into action!
+			int count = 0;//there had better be at least one considering we found one -_-
+			int anglesum = 0;
+			for (int angleIterator = 0; angleIterator < 60; angleIterator++) {
+				for (int radiusShift = 0; radiusShift < 5; radiusShift++) {
+					if (hitArray
+							[(int)(shipX + (craftdata.getHitboxRadius() + 0.5 * radiusShift) * 
+							Math.cos(6 * angleIterator))]
+							[(int)(shipY + (craftdata.getHitboxRadius() - 0.5 * radiusShift) * 
+							Math.sin(6 * angleIterator))]) {//holy crap that was hard
+						count++;
+						//System.out.println(angleIterator + " " + radiusShift);
+						anglesum += 6 * angleIterator;
+					}
+				}
+			}
+			double reflectEstimate = anglesum/count;
 		}
 	}
 }

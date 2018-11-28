@@ -29,7 +29,6 @@ public class Game {
 	public void update() {
 		//move everything
 		playerShip.move();
-		System.out.println("hey");
 		
 		//process collisions for everything
 		playerShip.collide();
