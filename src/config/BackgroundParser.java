@@ -1,0 +1,65 @@
+package config;
+
+import java.awt.Color;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
+import ui.Renderable;
+
+public class BackgroundParser {
+	private static BufferedImage test;
+	static {
+		try {
+			test = ImageIO.read(new File("resources/backgrounds/test.bmp"));
+		} catch (IOException ie) {
+		}
+	}
+
+	public static Renderable getBackgroundSprite(int width, int height) {
+		BufferedImage copy = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		copy.getGraphics().drawImage(test, 0, 0, width, height, null);
+
+		return new Renderable() {
+
+			@Override
+			public int getRenderY() {
+				// TODO Auto-generated method stub
+				return height / 2;
+			}
+
+			@Override
+			public int getRenderX() {
+				// TODO Auto-generated method stub
+				return width / 2;
+			}
+
+			@Override
+			public int getRenderPriority() {
+				return Integer.MIN_VALUE;
+			}
+
+			@Override
+			public Image getImg() {
+				return copy;
+			}
+
+		};
+	}
+
+	public static boolean[][] getBackgroundCollisions(int width, int height) {
+		BufferedImage copy = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		copy.getGraphics().drawImage(test, 0, 0, width, height, null);
+
+		boolean[][] ret = new boolean[width][height];
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				ret[i][j] = copy.getRGB(i, j) != Color.WHITE.getRGB();
+			}
+		}
+		return ret;
+	}
+}
