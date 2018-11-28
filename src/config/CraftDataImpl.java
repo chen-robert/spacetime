@@ -20,7 +20,12 @@ public class CraftDataImpl implements CraftData {
 	@Override
 	public double getAcceleration() {
 		// TODO Auto-generated method stub
-		return 1;
+		return 0.5;
+	}
+	
+	@Override
+	public double getDeceleration() {
+		return 0.3;
 	}
 
 	@Override
@@ -32,7 +37,7 @@ public class CraftDataImpl implements CraftData {
 	@Override
 	public double getTurnSpeed() {
 		// TODO Auto-generated method stub
-		return 1;
+		return 2.5;
 	}
 
 	@Override

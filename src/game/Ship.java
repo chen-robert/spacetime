@@ -60,22 +60,35 @@ public class Ship implements Renderable {
 		//DOES NOT HAVE SLOWDOWN LOL
 		if (Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_LEFT))direction += craftdata.getTurnSpeed();
 		if (Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_RIGHT))direction -= craftdata.getTurnSpeed();
+		
 		if (Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_UP)) {
 			velocityX += craftdata.getAcceleration() * Math.cos(getDirectionRadians());
 			//- not + as rendering coordinates are annoying >:(
 			velocityY -= craftdata.getAcceleration() * Math.sin(getDirectionRadians());
 		}
-		if (Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_DOWN)) {
-			velocityX -= 0.5 * craftdata.getAcceleration() * Math.cos(getDirectionRadians());
-			//- not + as rendering coordinates are annoying >:(
-			velocityY += 0.5 * craftdata.getAcceleration() * Math.sin(getDirectionRadians());
+		else if (Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_DOWN)) {
+			velocityX -= 0.25 * craftdata.getAcceleration() * Math.cos(getDirectionRadians());
+			velocityY += 0.25 * craftdata.getAcceleration() * Math.sin(getDirectionRadians());
 		}
+		
 		netvelocity = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
+		
+		if ((!Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_UP)) && 
+			(!Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_DOWN)) &&
+			netvelocity > 0) {
+			double newvelocity = netvelocity - craftdata.getDeceleration();
+			if (newvelocity < 0)newvelocity = 0;
+			double slowscaling = newvelocity/netvelocity;
+			velocityX *= slowscaling;
+			velocityY *= slowscaling;
+		}
+		
 		if (netvelocity > craftdata.getMaxSpeed()) {
 			double speedscaling = craftdata.getMaxSpeed()/netvelocity;
 			velocityX *= speedscaling;
 			velocityY *= speedscaling;
 		}
+		
 		shipX += velocityX;
 		shipY += velocityY;
 	}

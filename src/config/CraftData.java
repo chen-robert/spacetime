@@ -27,6 +27,12 @@ public interface CraftData {
 	 * @return acceleration speed
 	 */
 	double getAcceleration();
+	
+	/**
+	 * no, i don't care that Deceleration isn't a thing
+	 * @return the amount the ship decelerates in neutral
+	 */
+	double getDeceleration();
 
 	/**
 	 * @return maximum speed for the ship; on each tick, acceleration vectors are
