@@ -107,7 +107,6 @@ public class Ship implements Renderable {
 		
 		//BOTTOM
 		if (shipY + craftdata.getHitboxRadius() > UI.FIELD_HEIGHT) {
-			
 			shipY = 2 * UI.FIELD_HEIGHT - 2 * craftdata.getHitboxRadius() - shipY;
 			velocityX *= craftdata.getRebound();
 			velocityY *= -1 * craftdata.getRebound();
@@ -156,7 +155,12 @@ public class Ship implements Renderable {
 					}
 				}
 			}
-			double reflectEstimate = anglesum/count;
+			double reflectEstimateD = anglesum/count;
+			double reflectEstimateR = Math.toRadians(reflectEstimateD);
+			
+			double currentDegree = Math.atan2(0-velocityY, velocityX);
+			if (currentDegree < 0)currentDegree += 2 * Math.PI;
+			System.out.println(currentDegree + " " + reflectEstimateD);
 		}
 	}
 }
