@@ -1,18 +1,10 @@
 package config;
 
-import java.awt.image.BufferedImage;
-
 public class CraftDataImpl implements CraftData {
 
 	@Override
 	public String getName() {
 		return "Test";
-	}
-
-	@Override
-	public BufferedImage getImage() {
-		// TODO Auto-generated method stub
-		return ImageLoader.Craft_Test;
 	}
 
 	@Override
