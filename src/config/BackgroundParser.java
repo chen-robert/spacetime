@@ -9,6 +9,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import ui.Renderable;
+import ui.UI;
 
 public class BackgroundParser {
 	private static BufferedImage test;
@@ -39,7 +40,7 @@ public class BackgroundParser {
 
 			@Override
 			public int getRenderPriority() {
-				return Integer.MIN_VALUE;
+				return 1;
 			}
 
 			@Override
@@ -52,7 +53,7 @@ public class BackgroundParser {
 
 	public static boolean[][] getBackgroundCollisions(int width, int height) {
 		BufferedImage copy = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		copy.getGraphics().drawImage(test, 0, 0, width, height, null);
+		copy.getGraphics().drawImage(test, UI.SIDE_BUFFER, UI.SIDE_BUFFER + UI.TOP_BANNER, width, height, null);
 
 		boolean[][] ret = new boolean[width][height];
 		for (int i = 0; i < width; i++) {

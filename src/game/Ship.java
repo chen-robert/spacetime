@@ -35,11 +35,11 @@ public class Ship implements Renderable {
 	}
 	@Override
 	public int getRenderX() {
-		return (int)shipX + UI.SIDE_BUFFER;
+		return (int)shipX;
 	}
 	@Override
 	public int getRenderY() {
-		return (int)shipY + UI.TOP_BANNER + UI.SIDE_BUFFER;
+		return (int)shipY;
 	}
 	@Override
 	public int getRenderPriority() {

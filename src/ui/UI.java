@@ -45,13 +45,13 @@ public class UI extends JPanel {
 			Image sprite = item.getImg();
 
 			if (item.getDirectionRadians() == 0) {
-				g2d.drawImage(sprite, item.getRenderX() - sprite.getWidth(null) / 2,
-						item.getRenderY() - sprite.getHeight(null) / 2, null);
+				g2d.drawImage(sprite, SIDE_BUFFER + item.getRenderX() - sprite.getWidth(null) / 2,
+						SIDE_BUFFER + TOP_BANNER + item.getRenderY() - sprite.getHeight(null) / 2, null);
 			}
 
 			else {
 				// the following code should deal with rotated sprites.
-				g2d.translate(item.getRenderX(), item.getRenderY());
+				g2d.translate(SIDE_BUFFER + item.getRenderX(), SIDE_BUFFER + TOP_BANNER + item.getRenderY());
 				g2d.rotate(-item.getDirectionRadians());
 				// IMPORTANT: All sprites that are rotated MUST be square
 				// Otherwise, we get some problems with alignment
