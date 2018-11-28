@@ -8,6 +8,7 @@ import game.Game;
 import ui.UI;
 
 public class Main {
+	public static final int PORT = 8723;
 	public static final KeyAdapter KEY_ADAPTER = new KeyAdapter();
 
 	public static void main(String args[]) throws InterruptedException {
@@ -18,7 +19,7 @@ public class Main {
 
 		UI ui = new UI();
 		ui.changeFrame(g);
-		ui.setPreferredSize(new Dimension(UI.FIELD_WIDTH + 2 * UI.SIDE_BUFFER, 
+		ui.setPreferredSize(new Dimension(UI.FIELD_WIDTH + 2 * UI.SIDE_BUFFER,
 				UI.FIELD_HEIGHT + 2 * UI.SIDE_BUFFER + UI.TOP_BANNER));
 
 		frame.add(ui);

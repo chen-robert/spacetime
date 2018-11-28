@@ -1,4 +1,4 @@
-package server;
+package networking.server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -29,9 +29,7 @@ public class ServerThread implements Runnable {
 			try {
 				Socket s = ss.accept();
 
-				Runnable sh = sl.getHandler(s);
-
-				new Thread(sh).start();
+				new Thread(() -> sl.addSocket(s)).start();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
