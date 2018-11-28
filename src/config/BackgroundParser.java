@@ -9,7 +9,6 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import ui.Renderable;
-import ui.UI;
 
 public class BackgroundParser {
 	private static BufferedImage test;
@@ -53,12 +52,15 @@ public class BackgroundParser {
 
 	public static boolean[][] getBackgroundCollisions(int width, int height) {
 		BufferedImage copy = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		copy.getGraphics().drawImage(test, UI.SIDE_BUFFER, UI.SIDE_BUFFER + UI.TOP_BANNER, width, height, null);
+		copy.getGraphics().drawImage(test, 0, 0, null);
 
 		boolean[][] ret = new boolean[width][height];
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
-				ret[i][j] = copy.getRGB(i, j) != Color.WHITE.getRGB();
+				Color c = new Color(copy.getRGB(i, j));
+				int shade = (c.getRed() + c.getBlue() + c.getGreen()) / 3;
+
+				ret[i][j] = shade < 250;
 			}
 		}
 		return ret;
