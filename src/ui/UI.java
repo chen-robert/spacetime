@@ -14,9 +14,11 @@ import game.Game;
 public class UI extends JPanel {
 	private static final long serialVersionUID = 3279859667848651348L;
 
-	public static final Color BACKGROUND_COLOR = Color.WHITE;
+	public static final Color BACKGROUND_COLOR = new Color(210, 210, 240);
 	public static final int SIDE_BUFFER = 20;
 	public static final int TOP_BANNER = 100;
+	public static final int FIELD_WIDTH = 480;
+	public static final int FIELD_HEIGHT = 360;
 
 	private Game currentFrame;
 
@@ -41,14 +43,14 @@ public class UI extends JPanel {
 			
 			if (item.getDirectionRadians() == 0) {
 				g2d.drawImage(sprite, 
-						item.getX() - sprite.getWidth(null)/2,
-						item.getY() - sprite.getHeight(null)/2,
+						item.getRenderX() - sprite.getWidth(null)/2,
+						item.getRenderY() - sprite.getHeight(null)/2,
 						null);
 			}
 			
 			else {
 				//the following code should deal with rotated sprites.
-				g2d.translate(item.getX(), item.getY());
+				g2d.translate(item.getRenderX(), item.getRenderY());
 				g2d.rotate(-item.getDirectionRadians());
 				//IMPORTANT: All sprites that are rotated MUST be square
 				//Otherwise, we get some problems with alignment

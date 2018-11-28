@@ -16,7 +16,7 @@ public interface Renderable {
 	 * 
 	 * @return x coord
 	 */
-	public int getX();
+	public int getRenderX();
 
 	/**
 	 * Gets the y coordinate of the sprite. Note that the image is drawn centered on
@@ -24,7 +24,7 @@ public interface Renderable {
 	 * 
 	 * @return y coord
 	 */
-	public int getY();
+	public int getRenderY();
 
 	/**
 	 * gets the direction of the sprite. The default 0 angle faces to the right and 

@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import config.CraftData;
 import main.Main;
 import ui.Renderable;
+import ui.UI;
 
 public class Ship implements Renderable {
 	public Ship() {}
@@ -33,12 +34,12 @@ public class Ship implements Renderable {
 		return craftdata.getImage();
 	}
 	@Override
-	public int getX() {
-		return (int)shipX;
+	public int getRenderX() {
+		return (int)shipX + UI.SIDE_BUFFER;
 	}
 	@Override
-	public int getY() {
-		return (int)shipY;
+	public int getRenderY() {
+		return (int)shipY + UI.TOP_BANNER + UI.SIDE_BUFFER;
 	}
 	@Override
 	public int getRenderPriority() {
@@ -91,5 +92,40 @@ public class Ship implements Renderable {
 		
 		shipX += velocityX;
 		shipY += velocityY;
+	}
+	
+	//TODO: Implement collisions with walls, this is only with border RN
+	public void collide() {
+		//TOP (implement walls in this section alongside it
+		if (shipY - craftdata.getHitboxRadius() < 0) {
+			//has collided with the top wall; do this for any other top collisions as well
+			shipY = 2 * craftdata.getHitboxRadius() - shipY;
+			velocityX *= craftdata.getRebound();
+			velocityY *= -1 * craftdata.getRebound();
+		}
+		
+		//BOTTOM
+		if (shipY + craftdata.getHitboxRadius() > UI.FIELD_HEIGHT) {
+			//has collided with the bottom wall; do this for any other top collisions as well
+			shipY = 2 * UI.FIELD_HEIGHT - 2 * craftdata.getHitboxRadius() - shipY;
+			velocityX *= craftdata.getRebound();
+			velocityY *= -1 * craftdata.getRebound();
+		}
+		
+		//TOP
+		if (shipX - craftdata.getHitboxRadius() < 0) {
+			//has collided with the top wall; do this for any other top collisions as well
+			shipX = 2 * craftdata.getHitboxRadius() - shipX;
+			velocityX *= -1 * craftdata.getRebound();
+			velocityY *= craftdata.getRebound();
+		}
+		
+		//RIGHT
+		if (shipX + craftdata.getHitboxRadius() > UI.FIELD_WIDTH) {
+			//has collided with the right wall; do this for any other top collisions as well
+			shipX = 2 * UI.FIELD_WIDTH - 2 * craftdata.getHitboxRadius() - shipX;
+			velocityX *= -1 * craftdata.getRebound();
+			velocityY *= craftdata.getRebound();
+		}
 	}
 }

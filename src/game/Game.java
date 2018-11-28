@@ -25,10 +25,11 @@ public class Game {
 	}
 	
 	public void update() {
-		/*
-		 * We begin to process movement
-		 */
+		//move everything
 		playerShip.move();
+		
+		//process collisions for everything
+		playerShip.collide();
 	}
 
 	public Collection<Renderable> getRenderables() {
