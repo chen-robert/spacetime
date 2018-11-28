@@ -4,6 +4,7 @@ import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
+import config.BackgroundParser;
 import config.CraftData;
 import main.Main;
 import ui.Renderable;
@@ -13,8 +14,8 @@ public class Ship implements Renderable {
 	public Ship() {}
 	public Ship(CraftData cd) {
 		craftdata = cd;
-		shipX = 0;
-		shipY = 0;
+		shipX = 10;
+		shipY = 10;
 	}
 	
 	private double shipX;
@@ -94,11 +95,43 @@ public class Ship implements Renderable {
 		shipY += velocityY;
 	}
 	
-	//TODO: Implement collisions with walls, this is only with border RN
+	//TODO: Once we've detected collisions, actually do something with them
 	public void collide() {
-		//TOP (implement walls in this section alongside it
+		boolean foundCollision = false;
+		for (int angleIterator = 0; angleIterator < 30; angleIterator++) {
+			System.out.println("heyoo");
+			double testX = shipX + craftdata.getHitboxRadius() * Math.cos(12 * angleIterator);
+			double testY = shipY - craftdata.getHitboxRadius() * Math.sin(12 * angleIterator);
+			if (BackgroundParser.getBackgroundCollisions(480, 360)[(int)testX][(int)testY]) {
+				foundCollision = true;
+				break;
+			}
+		}
+		
+		if (foundCollision) {
+			//we know there is a collision; now we put algorithm into action!
+			int count = 0;//there had better be at least one considering we found one -_-
+			int anglesum = 0;
+			for (int angleIterator = 0; angleIterator < 60; angleIterator++) {
+				for (int radiusShift = 0; radiusShift < 5; radiusShift++) {
+					if (BackgroundParser.getBackgroundCollisions(480, 360)
+							[(int)(shipX + (craftdata.getHitboxRadius() + 0.5 * radiusShift) * 
+							Math.cos(6 * angleIterator))]
+							[(int)(shipY + (craftdata.getHitboxRadius() - 0.5 * radiusShift) * 
+							Math.sin(6 * angleIterator))]) {//holy crap that was hard
+						count++;
+						anglesum += 6 * angleIterator;
+					}
+				}
+			}
+			/**
+			 * this is now our estimate for the normal of the surface
+			 */
+			double reflectEstimate = anglesum/count;
+		}
+		
+		//TOP
 		if (shipY - craftdata.getHitboxRadius() < 0) {
-			//has collided with the top wall; do this for any other top collisions as well
 			shipY = 2 * craftdata.getHitboxRadius() - shipY;
 			velocityX *= craftdata.getRebound();
 			velocityY *= -1 * craftdata.getRebound();
@@ -106,15 +139,14 @@ public class Ship implements Renderable {
 		
 		//BOTTOM
 		if (shipY + craftdata.getHitboxRadius() > UI.FIELD_HEIGHT) {
-			//has collided with the bottom wall; do this for any other top collisions as well
+			
 			shipY = 2 * UI.FIELD_HEIGHT - 2 * craftdata.getHitboxRadius() - shipY;
 			velocityX *= craftdata.getRebound();
 			velocityY *= -1 * craftdata.getRebound();
 		}
 		
-		//TOP
+		//LEFT
 		if (shipX - craftdata.getHitboxRadius() < 0) {
-			//has collided with the top wall; do this for any other top collisions as well
 			shipX = 2 * craftdata.getHitboxRadius() - shipX;
 			velocityX *= -1 * craftdata.getRebound();
 			velocityY *= craftdata.getRebound();
@@ -122,7 +154,6 @@ public class Ship implements Renderable {
 		
 		//RIGHT
 		if (shipX + craftdata.getHitboxRadius() > UI.FIELD_WIDTH) {
-			//has collided with the right wall; do this for any other top collisions as well
 			shipX = 2 * UI.FIELD_WIDTH - 2 * craftdata.getHitboxRadius() - shipX;
 			velocityX *= -1 * craftdata.getRebound();
 			velocityY *= craftdata.getRebound();
