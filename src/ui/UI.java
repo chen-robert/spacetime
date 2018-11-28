@@ -30,32 +30,32 @@ public class UI extends JPanel {
 	public void paintComponent(Graphics g) {
 		if (currentFrame == null)
 			return;
-		
-		Graphics2D g2d = (Graphics2D)g;//just for safety and more usable features
+
+		Graphics2D g2d = (Graphics2D) g;// just for safety and more usable features
 
 		g2d.setColor(BACKGROUND_COLOR);
 		g2d.fillRect(0, 0, getWidth(), getHeight());
+
+		g2d.setColor(Color.WHITE);
+		g2d.fillRect(UI.SIDE_BUFFER, UI.SIDE_BUFFER + UI.TOP_BANNER, UI.FIELD_WIDTH, UI.FIELD_HEIGHT);
 
 		PriorityQueue<Renderable> items = new PriorityQueue<>((a, b) -> a.getRenderPriority() - b.getRenderPriority());
 		items.addAll(currentFrame.getRenderables());
 		for (Renderable item : items) {
 			Image sprite = item.getImg();
-			
+
 			if (item.getDirectionRadians() == 0) {
-				g2d.drawImage(sprite, 
-						item.getRenderX() - sprite.getWidth(null)/2,
-						item.getRenderY() - sprite.getHeight(null)/2,
-						null);
+				g2d.drawImage(sprite, item.getRenderX() - sprite.getWidth(null) / 2,
+						item.getRenderY() - sprite.getHeight(null) / 2, null);
 			}
-			
+
 			else {
-				//the following code should deal with rotated sprites.
+				// the following code should deal with rotated sprites.
 				g2d.translate(item.getRenderX(), item.getRenderY());
 				g2d.rotate(-item.getDirectionRadians());
-				//IMPORTANT: All sprites that are rotated MUST be square
-				//Otherwise, we get some problems with alignment
-				g2d.drawImage(sprite, 0 - sprite.getWidth(null) / 2, 0 - sprite.getHeight(null) / 2,
-						null);
+				// IMPORTANT: All sprites that are rotated MUST be square
+				// Otherwise, we get some problems with alignment
+				g2d.drawImage(sprite, 0 - sprite.getWidth(null) / 2, 0 - sprite.getHeight(null) / 2, null);
 				g2d.setTransform(new AffineTransform());
 			}
 		}
