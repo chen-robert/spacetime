@@ -137,30 +137,38 @@ public class Ship implements Renderable {
 				break;
 			}
 		}
-		
+
 		if (foundCollision) {
 			//we know there is a collision; now we put algorithm into action!
 			int count = 0;//there had better be at least one considering we found one -_-
 			int anglesum = 0;
-			for (int angleIterator = 0; angleIterator < 60; angleIterator++) {
+			for (int angleIterator = 0; angleIterator < 120; angleIterator++) {
 				for (int radiusShift = 0; radiusShift < 5; radiusShift++) {
 					if (hitArray
-							[(int)(shipX + (craftdata.getHitboxRadius() + 0.5 * radiusShift) * 
-							Math.cos(6 * angleIterator))]
-							[(int)(shipY + (craftdata.getHitboxRadius() - 0.5 * radiusShift) * 
-							Math.sin(6 * angleIterator))]) {//holy crap that was hard
+							[(int)(shipX + (craftdata.getHitboxRadius() + radiusShift) * 
+							Math.cos(Math.toRadians(3 * angleIterator)))]
+							[(int)(shipY + (craftdata.getHitboxRadius() - radiusShift) * 
+							Math.sin(Math.toRadians(3 * angleIterator)))]) {//holy crap that was hard
 						count++;
-						//System.out.println(angleIterator + " " + radiusShift);
-						anglesum += 6 * angleIterator;
+						anglesum += 3 * angleIterator;
 					}
 				}
 			}
 			double reflectEstimateD = anglesum/count;
-			double reflectEstimateR = Math.toRadians(reflectEstimateD);
+			double reflectEstimateR = Math.toRadians(reflectEstimateD) + Math.PI;
 			
+			if (Math.abs(velocityX) < 0.1)velocityX = 0;
 			double currentDegree = Math.atan2(0-velocityY, velocityX);
 			if (currentDegree < 0)currentDegree += 2 * Math.PI;
-			System.out.println(currentDegree + " " + reflectEstimateD);
+			System.out.println(Math.toDegrees(currentDegree) + " " + reflectEstimateD);
+			
+			double netvelocity = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
+			currentDegree = 2 * reflectEstimateR - currentDegree;
+			
+			shipX -= velocityX;
+			shipY -= velocityY;
+			velocityX = netvelocity * craftdata.getRebound() * Math.cos(currentDegree);
+			velocityY = netvelocity * craftdata.getRebound() * Math.sin(currentDegree); 
 		}
 	}
 }

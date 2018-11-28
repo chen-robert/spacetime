@@ -14,7 +14,7 @@ public class CraftDataImpl implements CraftData {
 
 	@Override
 	public double getRebound() {
-		return 0.5;
+		return 0.9;
 	}
 
 	@Override
@@ -31,7 +31,7 @@ public class CraftDataImpl implements CraftData {
 	@Override
 	public double getMaxSpeed() {
 		// TODO Auto-generated method stub
-		return 3;
+		return 10;
 	}
 
 	@Override
