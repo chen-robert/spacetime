@@ -142,15 +142,15 @@ public class Ship implements Renderable {
 			//we know there is a collision; now we put algorithm into action!
 			int count = 0;//there had better be at least one considering we found one -_-
 			int anglesum = 0;
-			for (int angleIterator = 0; angleIterator < 120; angleIterator++) {
-				for (int radiusShift = 0; radiusShift < 5; radiusShift++) {
+			for (int angleIterator = 0; angleIterator < 180; angleIterator++) {
+				for (int radiusShift = 0; radiusShift < 7; radiusShift++) {
 					if (hitArray
 							[(int)(shipX + (craftdata.getHitboxRadius() + radiusShift) * 
-							Math.cos(Math.toRadians(3 * angleIterator)))]
+							Math.cos(Math.toRadians(2 * angleIterator)))]
 							[(int)(shipY + (craftdata.getHitboxRadius() - radiusShift) * 
-							Math.sin(Math.toRadians(3 * angleIterator)))]) {//holy crap that was hard
+							Math.sin(Math.toRadians(2 * angleIterator)))]) {//holy crap that was hard
 						count++;
-						anglesum += 3 * angleIterator;
+						anglesum += 2 * angleIterator;
 					}
 				}
 			}
@@ -160,15 +160,19 @@ public class Ship implements Renderable {
 			if (Math.abs(velocityX) < 0.1)velocityX = 0;
 			double currentDegree = Math.atan2(0-velocityY, velocityX);
 			if (currentDegree < 0)currentDegree += 2 * Math.PI;
-			System.out.println(Math.toDegrees(currentDegree) + " " + reflectEstimateD);
+			//System.out.println(Math.toDegrees(currentDegree) + " " + reflectEstimateD);
 			
 			double netvelocity = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
-			currentDegree = 2 * reflectEstimateR - currentDegree;
-			
+			System.out.print(Math.toDegrees(currentDegree) + " ");
+			currentDegree = 2 * reflectEstimateR + Math.PI - currentDegree;
+			System.out.println(Math.toDegrees(currentDegree));
 			shipX -= velocityX;
 			shipY -= velocityY;
 			velocityX = netvelocity * craftdata.getRebound() * Math.cos(currentDegree);
-			velocityY = netvelocity * craftdata.getRebound() * Math.sin(currentDegree); 
+			velocityY = -1 * netvelocity * craftdata.getRebound() * Math.sin(currentDegree);
+
+			currentDegree = Math.atan2(0-velocityY, velocityX);
+			System.out.println(Math.toDegrees(currentDegree));
 		}
 	}
 }
