@@ -9,7 +9,7 @@ import game.Game;
 import ui.UI;
 
 public class Main {
-	public static final boolean DEBUG = true;
+	public static boolean DEBUG = false;
 
 	public static final int PORT = 8723;
 	public static final KeyAdapter KEY_ADAPTER = new KeyAdapter();

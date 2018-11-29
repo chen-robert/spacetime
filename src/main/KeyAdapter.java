@@ -10,6 +10,9 @@ public class KeyAdapter extends java.awt.event.KeyAdapter {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_D && e.isControlDown()) {
+			Main.DEBUG = !Main.DEBUG;
+		}
 		keys.add(e.getKeyCode());
 	}
 
