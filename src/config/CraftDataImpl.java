@@ -21,7 +21,7 @@ public class CraftDataImpl implements CraftData {
 	public double getAcceleration() {
 		return 0.5;
 	}
-	
+
 	@Override
 	public double getDeceleration() {
 		return 0.3;
@@ -29,7 +29,7 @@ public class CraftDataImpl implements CraftData {
 
 	@Override
 	public double getMaxSpeed() {
-		return 3;
+		return 10;
 	}
 
 	@Override

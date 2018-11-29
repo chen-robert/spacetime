@@ -12,12 +12,12 @@ public class Game {
 	/**
 	 * Used to update the game state. Game logic goes here.
 	 */
-	
+
 	ImageLoader imageloader;
-	
+
 	ArrayList<Renderable> renderables;
 	Ship playerShip;
-	
+
 	public Game() {
 		imageloader = new ImageLoader();
 		renderables = new ArrayList<Renderable>();
@@ -25,13 +25,9 @@ public class Game {
 		renderables.add(playerShip);
 		renderables.add(BackgroundParser.getBackgroundSprite(480, 360));
 	}
-	
+
 	public void update() {
-		//move everything
-		playerShip.move();
-		
-		//process collisions for everything
-		playerShip.collide();
+		playerShip.update();
 	}
 
 	public Collection<Renderable> getRenderables() {
