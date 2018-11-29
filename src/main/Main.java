@@ -33,7 +33,7 @@ public class Main {
 			g.update();
 			ui.repaint();
 
-			Thread.sleep(20);
+			Thread.sleep(16, 666);
 		}
 	}
 }

@@ -29,7 +29,7 @@ public class CraftDataImpl implements CraftData {
 
 	@Override
 	public double getMaxSpeed() {
-		return 10;
+		return 3;
 	}
 
 	@Override

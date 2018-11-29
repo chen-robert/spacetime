@@ -11,6 +11,7 @@ import ui.UI;
 
 public class Ship implements Renderable {
 	private static final int COLLISION_ACCURACY = 10;
+	private static final double MIN_REBOUND_FRAC = 1/3;//if traveling slower, no rebound
 
 	public Ship() {
 	}
@@ -221,18 +222,21 @@ public class Ship implements Renderable {
 			System.err.println(Math.toDegrees(currentAngle));
 			double netvelocity = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
 			currentAngle = 2 * reflectEstimateR + Math.PI - currentAngle;
-			// shipX -= velocityX;
-			// shipY -= velocityY;
 			velocityX = netvelocity * craftdata.getRebound() * Math.cos(currentAngle);
 			velocityY = -1 * netvelocity * craftdata.getRebound() * Math.sin(currentAngle);
+			//if the ship is too slow to rebound, stop it
+			if (Math.sqrt(velocityX * velocityX + velocityY * velocityY) < MIN_REBOUND_FRAC * craftdata.getMaxSpeed()) {
+				velocityX = 0;
+				velocityY = 0;
+			}
 			boolean stillCollided = true;
 			do {
 				stillCollided = false;
-				shipX += velocityX / 4;
-				shipY += velocityY / 4;
-				for (int angleIterator = 0; angleIterator < 30; angleIterator++) {
-					double testX = shipX + craftdata.getHitboxRadius() * Math.cos(Math.PI / 15 * angleIterator);
-					double testY = shipY - craftdata.getHitboxRadius() * Math.sin(Math.PI / 15 * angleIterator);
+				shipX += Math.cos(currentAngle) / 10;
+				shipY -= Math.sin(currentAngle) / 10;//change if necessary
+				for (int angleIterator = 0; angleIterator < 8; angleIterator++) {
+					double testX = shipX + craftdata.getHitboxRadius() * Math.cos(Math.PI / 4 * angleIterator);
+					double testY = shipY - craftdata.getHitboxRadius() * Math.sin(Math.PI / 4 * angleIterator);
 					if (hitArray[(int) testX][(int) testY]) {
 						stillCollided = true;
 					}
