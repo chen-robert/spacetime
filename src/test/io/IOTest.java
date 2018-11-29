@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.util.Arrays;
+import java.util.Random;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,6 +39,30 @@ class IOTest {
 	@Test
 	void test() {
 		testWrite("Hello there!", new byte[] {});
+
+		for (int i = 0; i < 10; i++) {
+			testWrite("Hello there!", genByteArray(1 << i));
+		}
+		for (int i = 0; i < 10; i++) {
+			testWrite(new String(genByteArray(1 << i)), new byte[] {});
+		}
+		for (int i = 0; i < 10; i++) {
+			testWrite(new String(genByteArray(1 << i)), genByteArray(1 << i));
+		}
+	}
+
+	@Test
+	void testLarge() {
+		for (int i = 0; i < 20; i++) {
+			testWrite("Hello there!", genByteArray(1 << i));
+		}
+	}
+
+	byte[] genByteArray(int size) {
+		byte[] ret = new byte[size];
+		new Random().nextBytes(ret);
+
+		return ret;
 	}
 
 	void testWrite(String header, byte[] data) {
