@@ -1,6 +1,7 @@
 package main;
 
 import java.awt.Dimension;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JFrame;
 
@@ -8,6 +9,8 @@ import game.Game;
 import ui.UI;
 
 public class Main {
+	public static final boolean DEBUG = true;
+
 	public static final int PORT = 8723;
 	public static final KeyAdapter KEY_ADAPTER = new KeyAdapter();
 
@@ -29,11 +32,23 @@ public class Main {
 
 		frame.addKeyListener(KEY_ADAPTER);
 
+		boolean debugStep = true;
 		while (true) {
-			g.update();
+			if (DEBUG) {
+				if (KEY_ADAPTER.isKeyPressed(KeyEvent.VK_V)) {
+					if (debugStep) {
+						debugStep = false;
+						g.update();
+					}
+				} else {
+					debugStep = true;
+				}
+			} else {
+				g.update();
+			}
 			ui.repaint();
 
-			Thread.sleep(16, 666);
+			Thread.sleep(16);
 		}
 	}
 }
