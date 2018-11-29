@@ -129,50 +129,96 @@ public class Ship implements Renderable {
 		
 		
 		boolean foundCollision = false;
-		for (int angleIterator = 0; angleIterator < 30; angleIterator++) {
-			double testX = shipX + craftdata.getHitboxRadius() * Math.cos(12 * angleIterator);
-			double testY = shipY - craftdata.getHitboxRadius() * Math.sin(12 * angleIterator);
+		for (int angleIterator = 0; angleIterator < 8; angleIterator++) {
+			double testX = shipX + craftdata.getHitboxRadius() * Math.cos(45 * angleIterator);
+			double testY = shipY - craftdata.getHitboxRadius() * Math.sin(45 * angleIterator);
+			
 			if (hitArray[(int)testX][(int)testY]) {
 				foundCollision = true;
-				break;
 			}
 		}
 
+		//if this screws up, fix the heuristic accordingly
 		if (foundCollision) {
-			//we know there is a collision; now we put algorithm into action!
-			int count = 0;//there had better be at least one considering we found one -_-
-			int anglesum = 0;
-			for (int angleIterator = 0; angleIterator < 180; angleIterator++) {
-				for (int radiusShift = 0; radiusShift < 7; radiusShift++) {
-					if (hitArray
-							[(int)(shipX + (craftdata.getHitboxRadius() + radiusShift) * 
-							Math.cos(Math.toRadians(2 * angleIterator)))]
-							[(int)(shipY + (craftdata.getHitboxRadius() - radiusShift) * 
-							Math.sin(Math.toRadians(2 * angleIterator)))]) {//holy crap that was hard
-						count++;
-						anglesum += 2 * angleIterator;
-					}
+			//we know there is a collision; now we put bad heuristic into action!
+			int numCollides = 0;
+			boolean[] hasCollides = new boolean[8];
+			for (int angleIterator = 0; angleIterator < 8; angleIterator++) {
+				double testX = shipX + craftdata.getHitboxRadius() * Math.cos(45 * angleIterator);
+				double testY = shipY - craftdata.getHitboxRadius() * Math.sin(45 * angleIterator);
+				if (hitArray[(int)testX][(int)testY]) {
+					hasCollides[angleIterator] = true;
+					numCollides++;
 				}
 			}
-			double reflectEstimateD = anglesum/count;
-			double reflectEstimateR = Math.toRadians(reflectEstimateD) + Math.PI;
+
+			int reflectEstimateD = -1;
+			switch (numCollides) {
+			case 0:
+				System.exit(-69);
+				break;
+			case 1:
+				for (int i = 0; i < 8; i++) {
+					if (hasCollides[i])
+						reflectEstimateD = 45 * i;
+				}
+				if (reflectEstimateD == -1) {
+					System.out.println("boo");
+					System.exit(-6969);
+				}
+				break;
+			case 2:
+				for (int i = 0; i < 4; i++) {
+					if (hasCollides[2*i+1]) 
+						reflectEstimateD = 45 + 90 * i;
+				}
+				if (reflectEstimateD == -1) {
+					for (int j = 0; j < 8; j++)System.out.println(hasCollides[j]);
+					System.out.println("booboo");
+					System.exit(-696969);
+				}
+				break;
+			case 3:
+				for (int i = 0; i < 8; i++) {
+					if (hasCollides[(i+7)%8] && hasCollides[i] && hasCollides[(i+1)%8]) {
+						reflectEstimateD = 45 * i;
+					}
+				}
+				if (reflectEstimateD == -1) {
+					for (int j = 0; j < 8; j++)System.out.println(hasCollides[j]);
+					System.out.println("boobooboo");
+					System.exit(-69696969);
+				}
+				break;
+			default:
+				System.exit(69);//the ship is obviously too fast
+			}
+			double reflectEstimateR = Math.toRadians(reflectEstimateD);
+			System.err.print(reflectEstimateD + " ");
 			
 			if (Math.abs(velocityX) < 0.1)velocityX = 0;
 			double currentDegree = Math.atan2(0-velocityY, velocityX);
 			if (currentDegree < 0)currentDegree += 2 * Math.PI;
-			//System.out.println(Math.toDegrees(currentDegree) + " " + reflectEstimateD);
-			
+			System.err.println(Math.toDegrees(currentDegree));
 			double netvelocity = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
-			System.out.print(Math.toDegrees(currentDegree) + " ");
 			currentDegree = 2 * reflectEstimateR + Math.PI - currentDegree;
-			System.out.println(Math.toDegrees(currentDegree));
-			shipX -= velocityX;
-			shipY -= velocityY;
+			//shipX -= velocityX;
+			//shipY -= velocityY;
 			velocityX = netvelocity * craftdata.getRebound() * Math.cos(currentDegree);
 			velocityY = -1 * netvelocity * craftdata.getRebound() * Math.sin(currentDegree);
-
-			currentDegree = Math.atan2(0-velocityY, velocityX);
-			System.out.println(Math.toDegrees(currentDegree));
+			boolean stillCollided = true;
+			do {
+				stillCollided = false;
+				shipX += velocityX / 4;
+				shipY += velocityY / 4;
+				for (int angleIterator = 0; angleIterator < 30; angleIterator++) {
+					double testX = shipX + craftdata.getHitboxRadius() * Math.cos(12 * angleIterator);
+					double testY = shipY - craftdata.getHitboxRadius() * Math.sin(12 * angleIterator);
+					if (hitArray[(int)testX][(int)testY]) {
+						stillCollided = true;
+					}
+				}
+			} while(stillCollided);
 		}
 	}
 }
