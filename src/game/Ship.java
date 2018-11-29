@@ -130,8 +130,8 @@ public class Ship implements Renderable {
 		
 		boolean foundCollision = false;
 		for (int angleIterator = 0; angleIterator < 8; angleIterator++) {
-			double testX = shipX + craftdata.getHitboxRadius() * Math.cos(45 * angleIterator);
-			double testY = shipY - craftdata.getHitboxRadius() * Math.sin(45 * angleIterator);
+			double testX = shipX + craftdata.getHitboxRadius() * Math.cos(Math.PI / 4 * angleIterator);
+			double testY = shipY - craftdata.getHitboxRadius() * Math.sin(Math.PI / 4 * angleIterator);
 			
 			if (hitArray[(int)testX][(int)testY]) {
 				foundCollision = true;
@@ -144,8 +144,8 @@ public class Ship implements Renderable {
 			int numCollides = 0;
 			boolean[] hasCollides = new boolean[8];
 			for (int angleIterator = 0; angleIterator < 8; angleIterator++) {
-				double testX = shipX + craftdata.getHitboxRadius() * Math.cos(45 * angleIterator);
-				double testY = shipY - craftdata.getHitboxRadius() * Math.sin(45 * angleIterator);
+				double testX = shipX + craftdata.getHitboxRadius() * Math.cos(Math.PI / 4 * angleIterator);
+				double testY = shipY - craftdata.getHitboxRadius() * Math.sin(Math.PI / 4 * angleIterator);
 				if (hitArray[(int)testX][(int)testY]) {
 					hasCollides[angleIterator] = true;
 					numCollides++;
