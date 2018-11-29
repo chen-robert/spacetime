@@ -11,6 +11,7 @@ import java.util.List;
  */
 public class EncodedReader implements Runnable {
 	private InputStream in;
+	private volatile boolean running = true;
 	private final List<PacketListener> listeners = new LinkedList<>();
 
 	public EncodedReader(InputStream in) {
@@ -46,7 +47,6 @@ public class EncodedReader implements Runnable {
 
 	@Override
 	public void run() {
-		boolean running = true;
 		while (running) {
 			try {
 				if (in.available() > 7) {
@@ -95,4 +95,26 @@ public class EncodedReader implements Runnable {
 			listeners.add(pl);
 		}
 	}
+
+	/**
+	 * Removes a listener.
+	 * 
+	 * @param pl listener to remove
+	 */
+	public void removeListener(PacketListener pl) {
+		synchronized (listeners) {
+			listeners.remove(pl);
+		}
+	}
+
+	/**
+	 * Closes the reader and releases all resources.
+	 * 
+	 * @throws IOException if the underlying input stream throws an exception
+	 */
+	public void close() throws IOException {
+		running = false;
+		in.close();
+	}
+
 }

@@ -51,4 +51,13 @@ public class EncodedOutputStream {
 		} catch (IOException ignored) {
 		}
 	}
+
+	/**
+	 * Closes the outputstream and releases underlying resources.
+	 * 
+	 * @throws IOException if the underlying outputstream throws an exception
+	 */
+	public void close() throws IOException {
+		out.close();
+	}
 }
