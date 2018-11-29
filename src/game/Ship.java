@@ -172,7 +172,7 @@ public class Ship implements Renderable {
 				}
 			}
 
-			int reflectEstimateD = -1;
+			double reflectEstimateD = -1;
 			switch (numCollides) {
 			case 0:
 				System.exit(-69);
@@ -182,7 +182,7 @@ public class Ship implements Renderable {
 					if (hasCollides[i]) reflectEstimateD = 45 * i;
 				}
 				if (reflectEstimateD == -1) {
-					System.out.println("boo");
+					System.out.println("what the actual heccc");
 					System.exit(-6969);
 				}
 				break;
@@ -191,10 +191,11 @@ public class Ship implements Renderable {
 					if (hasCollides[2 * i + 1]) reflectEstimateD = 45 + 90 * i;
 				}
 				if (reflectEstimateD == -1) {
+					double sum = 0;
 					for (int j = 0; j < 8; j++)
-						System.out.println(hasCollides[j]);
-					System.out.println("booboo");
-					System.exit(-696969);
+						if (hasCollides[j])sum += j;
+					sum /= 2;
+					reflectEstimateD = 45 * sum;
 				}
 				break;
 			case 3:
@@ -204,14 +205,20 @@ public class Ship implements Renderable {
 					}
 				}
 				if (reflectEstimateD == -1) {
+					double sum = 0;
 					for (int j = 0; j < 8; j++)
-						System.out.println(hasCollides[j]);
-					System.out.println("boobooboo");
-					System.exit(-69696969);
+						if (hasCollides[j])sum += j;
+					sum /= 3;
+					reflectEstimateD = 45 * sum;
 				}
 				break;
 			default:
-				System.exit(69);// the ship is obviously too fast
+				double sum = 0;
+				for (int j = 0; j < 8; j++)
+					if (hasCollides[j])sum += j;
+				sum /= numCollides;
+				reflectEstimateD = 45 * sum;
+				break;
 			}
 			double reflectEstimateR = Math.toRadians(reflectEstimateD);
 			System.err.print(reflectEstimateD + " ");
