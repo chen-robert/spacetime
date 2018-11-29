@@ -35,7 +35,16 @@ public class EncodedOutputStream {
 			out.write(aData);
 		}
 
-		this.out.write(out.toByteArray());
+		synchronized (this.out) {
+			byte[] finalData = out.toByteArray();
+
+			int blockSize = 1024;
+			int blocks = finalData.length / blockSize;
+			for (int i = 0; i < blocks; i++) {
+				this.out.write(finalData, blockSize * i, blockSize);
+			}
+			this.out.write(finalData, blocks * blockSize, finalData.length - blocks * blockSize);
+		}
 	}
 
 	/**

@@ -3,8 +3,8 @@ package test.io;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -15,31 +15,46 @@ import org.junit.jupiter.api.Test;
 import io.EncodedOutputStream;
 import io.EncodedReader;
 import io.PacketListener;
+import main.Main;
 
 class IOTest {
 	private EncodedOutputStream out;
 	private EncodedReader in;
+	private Socket s;
+	private ServerSocket ss;
 
 	@BeforeEach
 	void setUp() throws IOException {
-		PipedInputStream pIn = new PipedInputStream();
-		PipedOutputStream pOut = new PipedOutputStream(pIn);
+		new Thread(() -> {
+			try {
+				s = new Socket("", Main.PORT);
+				out = new EncodedOutputStream(s.getOutputStream());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}).start();
 
-		in = new EncodedReader(pIn);
+		ss = new ServerSocket(Main.PORT);
+		in = new EncodedReader(ss.accept().getInputStream());
 		new Thread(in).start();
-		out = new EncodedOutputStream(pOut);
 	}
 
 	@AfterEach
 	void tearDown() throws IOException {
 		in.close();
 		out.close();
+
+		s.close();
+		ss.close();
 	}
 
 	@Test
 	void test() {
 		testWrite("Hello there!", new byte[] {});
+	}
 
+	@Test
+	void testBasicIO() {
 		for (int i = 0; i < 10; i++) {
 			testWrite("Hello there!", genByteArray(1 << i));
 		}
