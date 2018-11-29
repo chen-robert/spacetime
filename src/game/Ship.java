@@ -197,23 +197,23 @@ public class Ship implements Renderable {
 			System.err.print(reflectEstimateD + " ");
 			
 			if (Math.abs(velocityX) < 0.1)velocityX = 0;
-			double currentDegree = Math.atan2(0-velocityY, velocityX);
-			if (currentDegree < 0)currentDegree += 2 * Math.PI;
-			System.err.println(Math.toDegrees(currentDegree));
+			double currentAngle = Math.atan2(0-velocityY, velocityX);
+			if (currentAngle < 0)currentAngle += 2 * Math.PI;
+			System.err.println(Math.toDegrees(currentAngle));
 			double netvelocity = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
-			currentDegree = 2 * reflectEstimateR + Math.PI - currentDegree;
+			currentAngle = 2 * reflectEstimateR + Math.PI - currentAngle;
 			//shipX -= velocityX;
 			//shipY -= velocityY;
-			velocityX = netvelocity * craftdata.getRebound() * Math.cos(currentDegree);
-			velocityY = -1 * netvelocity * craftdata.getRebound() * Math.sin(currentDegree);
+			velocityX = netvelocity * craftdata.getRebound() * Math.cos(currentAngle);
+			velocityY = -1 * netvelocity * craftdata.getRebound() * Math.sin(currentAngle);
 			boolean stillCollided = true;
 			do {
 				stillCollided = false;
 				shipX += velocityX / 4;
 				shipY += velocityY / 4;
 				for (int angleIterator = 0; angleIterator < 30; angleIterator++) {
-					double testX = shipX + craftdata.getHitboxRadius() * Math.cos(12 * angleIterator);
-					double testY = shipY - craftdata.getHitboxRadius() * Math.sin(12 * angleIterator);
+					double testX = shipX + craftdata.getHitboxRadius() * Math.cos(Math.PI / 15 * angleIterator);
+					double testY = shipY - craftdata.getHitboxRadius() * Math.sin(Math.PI / 15 * angleIterator);
 					if (hitArray[(int)testX][(int)testY]) {
 						stillCollided = true;
 					}
