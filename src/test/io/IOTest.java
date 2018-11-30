@@ -23,11 +23,13 @@ class IOTest {
 	private Socket s;
 	private ServerSocket ss;
 
+	private int iter = 0;
+
 	@BeforeEach
 	void setUp() throws IOException {
 		new Thread(() -> {
 			try {
-				s = new Socket("", Main.PORT);
+				s = new Socket("", Main.PORT + iter++);
 				out = new EncodedOutputStream(s.getOutputStream());
 			} catch (IOException e) {
 				e.printStackTrace();

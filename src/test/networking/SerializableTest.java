@@ -11,8 +11,8 @@ import networking.Serializable;
 class SerializableTest {
 
 	@Test
-	void testGenerateId() {
-		int tests = (int) 1e9;
+	void testMillionGenerateId() {
+		int tests = (int) 1e6;
 
 		HashSet<String> ids = new HashSet<>();
 		for (int i = 0; i < tests; i++) {

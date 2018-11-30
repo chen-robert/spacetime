@@ -7,6 +7,8 @@ public interface Serializable {
 	 * The length of the generated id.
 	 */
 	public static final int ID_LEN = 32;
+	static final int[] ID_CHARS = IntStream.range(0, 128)
+			.filter(i -> ('A' <= i && i <= 'Z') || ('a' <= i && i <= 'z') || ('0' <= i && i <= '9')).toArray();
 
 	/**
 	 * Generates a unique id.
@@ -14,15 +16,11 @@ public interface Serializable {
 	 * @return id
 	 */
 	public static String generateId() {
-		int[] chars = IntStream.range(0, 128)
-				.filter(i -> ('A' <= i && i <= 'Z') || ('a' <= i && i <= 'z') || ('0' <= i && i <= '9')).toArray();
-
-		String id = "";
+		byte[] data = new byte[ID_LEN];
 		for (int i = 0; i < ID_LEN; i++) {
-			id += chars[(int) (Math.random() * chars.length)];
+			data[i] = (byte) ID_CHARS[(int) (Math.random() * ID_CHARS.length)];
 		}
-
-		return id;
+		return new String(data);
 	}
 
 	String id = generateId();
