@@ -11,7 +11,7 @@ import ui.UI;
 
 public class Ship implements Renderable {
 	private static final int COLLISION_ACCURACY = 10;
-	private static final double MIN_REBOUND_FRAC = 1/3;//if traveling slower, no rebound
+	private static final double MIN_REBOUND_FRAC = 2/3;//if traveling slower, no rebound
 
 	public Ship() {
 	}
@@ -223,6 +223,7 @@ public class Ship implements Renderable {
 			double reflectEstimateR = Math.toRadians(reflectEstimateD);
 			System.err.print(reflectEstimateD + " ");
 
+			double prevVelocity = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
 			if (Math.abs(velocityX) < 0.1) velocityX = 0;
 			double currentAngle = Math.atan2(0 - velocityY, velocityX);
 			if (currentAngle < 0) currentAngle += 2 * Math.PI;
@@ -232,15 +233,15 @@ public class Ship implements Renderable {
 			velocityX = netvelocity * craftdata.getRebound() * Math.cos(currentAngle);
 			velocityY = -1 * netvelocity * craftdata.getRebound() * Math.sin(currentAngle);
 			//if the ship is too slow to rebound, stop it
-			if (Math.sqrt(velocityX * velocityX + velocityY * velocityY) < MIN_REBOUND_FRAC * craftdata.getMaxSpeed()) {
+			if (prevVelocity * craftdata.getRebound() < MIN_REBOUND_FRAC * craftdata.getMaxSpeed()) {
 				velocityX = 0;
 				velocityY = 0;
 			}
 			boolean stillCollided = true;
-			do {
+			//do {
 				stillCollided = false;
-				shipX += Math.cos(currentAngle) / 10;
-				shipY -= Math.sin(currentAngle) / 10;//change if necessary
+				shipX += Math.cos(currentAngle) * prevVelocity * craftdata.getRebound();
+				shipY -= Math.sin(currentAngle) * prevVelocity * craftdata.getRebound();//change if necessary
 				for (int angleIterator = 0; angleIterator < 8; angleIterator++) {
 					double testX = shipX + craftdata.getHitboxRadius() * Math.cos(Math.PI / 4 * angleIterator);
 					double testY = shipY - craftdata.getHitboxRadius() * Math.sin(Math.PI / 4 * angleIterator);
@@ -248,7 +249,7 @@ public class Ship implements Renderable {
 						stillCollided = true;
 					}
 				}
-			} while (stillCollided);
+			//} while (stillCollided);
 		}
 	}
 }
