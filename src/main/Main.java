@@ -48,7 +48,7 @@ public class Main {
 			}
 			ui.repaint();
 
-			Thread.sleep(16);
+			Thread.sleep(16, 666666);
 		}
 	}
 }
