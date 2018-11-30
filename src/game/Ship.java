@@ -85,7 +85,6 @@ public class Ship implements Renderable {
 	 * Uses the inputs from KeyAdapter to update its data
 	 */
 	public void processKeys() {
-		// DOES NOT HAVE SLOWDOWN LOL
 		if (Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_LEFT)) direction += craftdata.getTurnSpeed();
 		if (Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_RIGHT)) direction -= craftdata.getTurnSpeed();
 
@@ -159,8 +158,6 @@ public class Ship implements Renderable {
 
 		// if this screws up, fix the heuristic accordingly
 		if (foundCollision) {
-			// we know there is a collision; now we put bad heuristic into
-			// action!
 			int numCollides = 0;
 			boolean[] hasCollides = new boolean[8];
 			for (int angleIterator = 0; angleIterator < 8; angleIterator++) {
@@ -240,10 +237,10 @@ public class Ship implements Renderable {
 			velocityX = prevVelocity * craftdata.getRebound() * Math.cos(currentAngle);
 			velocityY = -1 * prevVelocity * craftdata.getRebound() * Math.sin(currentAngle);
 			//if the ship is too slow to rebound, stop it
-			if (prevVelocity * craftdata.getRebound() < MIN_REBOUND) {
-				velocityX = 0;
-				velocityY = 0;
-			}
+			//if (prevVelocity * craftdata.getRebound() < MIN_REBOUND) {
+			//	velocityX = 0;
+			//	velocityY = 0;
+			//}
 			
 			/*
 			boolean stillCollided = true;

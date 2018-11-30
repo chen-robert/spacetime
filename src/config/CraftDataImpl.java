@@ -14,7 +14,7 @@ public class CraftDataImpl implements CraftData {
 
 	@Override
 	public double getRebound() {
-		return 0.5;
+		return 0.8;
 	}
 
 	@Override
