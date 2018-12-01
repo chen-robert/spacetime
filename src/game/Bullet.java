@@ -12,12 +12,13 @@ public class Bullet implements Renderable{
 	public Bullet() {
 	}
 	
-	public Bullet(BulletData bd) {
+	public Bullet(BulletData bd, double initialX, double initialY, double directionDegrees, double dm) {
 		bulletdata = bd;
-		bulletX = bd.getInitialX();
-		bulletY = bd.getInitialY();
-		velocityX = bd.getInitialSpeed() * Math.cos(bd.getInitialDirection());
-		velocityY = -1 * bd.getInitialSpeed() * Math.sin(bd.getInitialDirection());
+		bulletX = initialX;
+		bulletY = initialY;
+		velocityX = bd.getInitialSpeed() * Math.cos(Math.toRadians(directionDegrees));
+		velocityY = -1 * bd.getInitialSpeed() * Math.sin(Math.toRadians(directionDegrees));
+		damageMultiplier = dm;
 	}
 	
 	//VARIABLES
@@ -25,6 +26,8 @@ public class Bullet implements Renderable{
 	private double bulletY;
 	private double velocityX;
 	private double velocityY;
+	
+	private double damageMultiplier;
 	
 	private BulletData bulletdata;
 	
@@ -51,4 +54,5 @@ public class Bullet implements Renderable{
 		return 4;
 	}
 
+	
 }

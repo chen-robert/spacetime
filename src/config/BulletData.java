@@ -11,16 +11,6 @@ public interface BulletData {
 	default Image getImage() {
 		return ImageLoader.getImg(getName());
 	}
-
-	/**
-	 * @return Spawn X value
-	 */
-	double getInitialX();
-	
-	/**
-	 * @return Spawn Y value
-	 */
-	double getInitialY();
 	
 	/**
 	 * @return the speed at which to start the bullet
@@ -28,13 +18,9 @@ public interface BulletData {
 	double getInitialSpeed();
 	
 	/**
-	 * @return the direction in which to start the bullet
-	 */
-	double getInitialDirection();
-	
-	/**
 	 * @return radius of the circular hitbox
 	 * if 0, bullet only hits a ship if it enters one
+	 * Note: 0 also screw over wallbounce. Plan accordingly.
 	 */
 	double getHitboxRadius();
 	
@@ -45,9 +31,10 @@ public interface BulletData {
 	double getExplosionRadius();
 
 	/**
-	 * @return amount of damage dealt per bullet
+	 * @return amount of damage dealt per bullet at base multiplier
+	 * This value can be affected by the kind of ship
 	 */
-	double getDamage();
+	double getBaseDamage();
 	
 
 	/**
