@@ -11,7 +11,7 @@ import ui.UI;
 
 public class Ship implements Renderable {
 	private static final int COLLISION_ACCURACY = 20;
-	private static final double MIN_REBOUND = 1;//if traveling slower, no rebound
+	private static final double MIN_REBOUND = 0.1;//if traveling slower, no rebound
 
 	public Ship() {
 	}
@@ -220,9 +220,7 @@ public class Ship implements Renderable {
 				break;
 			}
 			double reflectEstimateR = Math.toRadians(reflectEstimateD);
-			System.err.print(reflectEstimateD + " ");
 			
-
 			move(0.0 - 1.0/COLLISION_ACCURACY);
 
 			double prevVelocity = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
@@ -230,33 +228,16 @@ public class Ship implements Renderable {
 			if (Math.abs(velocityY) < 0.2) velocityY = 0;
 			double currentAngle = Math.atan2(0 - velocityY, velocityX);
 			if (currentAngle < 0) currentAngle += 2 * Math.PI;
-			System.err.println(Math.toDegrees(currentAngle));
 			currentAngle = 2 * reflectEstimateR + Math.PI - currentAngle;
 			
 			
 			velocityX = prevVelocity * craftdata.getRebound() * Math.cos(currentAngle);
 			velocityY = -1 * prevVelocity * craftdata.getRebound() * Math.sin(currentAngle);
 			//if the ship is too slow to rebound, stop it
-			//if (prevVelocity * craftdata.getRebound() < MIN_REBOUND) {
-			//	velocityX = 0;
-			//	velocityY = 0;
-			//}
-			
-			/*
-			boolean stillCollided = true;
-			//do {
-				stillCollided = false;
-				shipX += Math.cos(currentAngle) * prevVelocity;
-				shipY -= Math.sin(currentAngle) * prevVelocity;//change if necessary
-				for (int angleIterator = 0; angleIterator < 8; angleIterator++) {
-					double testX = shipX + craftdata.getHitboxRadius() * Math.cos(Math.PI / 4 * angleIterator);
-					double testY = shipY - craftdata.getHitboxRadius() * Math.sin(Math.PI / 4 * angleIterator);
-					if (hitArray[(int) testX][(int) testY]) {
-						stillCollided = true;
-					}
-				}
-			//} while (stillCollided);
-			 * */
+			if (prevVelocity * craftdata.getRebound() < MIN_REBOUND) {
+				velocityX = 0;
+				velocityY = 0;
+			}
 		}
 	}
 }

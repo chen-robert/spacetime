@@ -9,9 +9,11 @@ import javax.imageio.ImageIO;
 
 public class ImageLoader {
 	private final static HashMap<String, Image> IMGS = new HashMap<>();
-	private final static String SPRITE_PATH = "resources/sprites/";
+	private final static String RESOURCE_PATH = "resources/";
 	static {
-		loadImage("Test", "craft_test.png");
+		loadImage("Test", "sprites/craft_test.png");
+		
+		loadImage("Red Pellet", "bullets/pellet_red.png");
 	}
 
 	/**
@@ -22,7 +24,7 @@ public class ImageLoader {
 	 */
 	private static void loadImage(String name, String file) {
 		try {
-			IMGS.put(name, ImageIO.read(new File(SPRITE_PATH + file)));
+			IMGS.put(name, ImageIO.read(new File(RESOURCE_PATH + file)));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.err.printf("Failed to load %s", name);
