@@ -54,5 +54,8 @@ public class Bullet implements Renderable{
 		return 4;
 	}
 
-	
+	public void linearMove(double delta) {
+		bulletX += velocityX * delta;
+		bulletY += velocityY * delta;
+	}
 }
