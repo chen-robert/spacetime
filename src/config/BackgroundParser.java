@@ -12,6 +12,7 @@ import ui.Renderable;
 
 public class BackgroundParser {
 	private static BufferedImage test;
+	private static boolean[][] cachedCollisions;
 	static {
 		try {
 			test = ImageIO.read(new File("resources/backgrounds/test.bmp"));
@@ -51,6 +52,13 @@ public class BackgroundParser {
 	}
 
 	public static boolean[][] getBackgroundCollisions(int width, int height) {
+		if (cachedCollisions == null) {
+			cachedCollisions = generateBackgroundCollisions(width, height);
+		}
+		return cachedCollisions;
+	}
+
+	public static boolean[][] generateBackgroundCollisions(int width, int height) {
 		BufferedImage copy = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		copy.getGraphics().drawImage(test, 0, 0, width, height, null);
 
