@@ -35,7 +35,16 @@ public interface BulletData {
 	 * This value can be affected by the kind of ship
 	 */
 	double getBaseDamage();
+
 	
+	/**
+	 * Linear: Straight line
+	 * Homing: Homes in on a certain point
+	 * Sinusoid: Curves back and forth
+	 * Controlled: Depends on the player
+	 * @return the type of movement path that the bullet commits
+	 */
+	String getMovementType();
 
 	/**
 	 * @return a double between 0 and 1, fraction of energy when rebounding

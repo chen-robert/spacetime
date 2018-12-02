@@ -28,6 +28,11 @@ public class BulletDataImpl implements BulletData{
 	}
 
 	@Override
+	public String getMovementType() {
+		return "Linear";
+	}
+	
+	@Override
 	public double getRebound() {
 		return -1;
 	}
@@ -36,5 +41,6 @@ public class BulletDataImpl implements BulletData{
 	public double getWallDrag() {
 		return -1;
 	}
+
 	
 }

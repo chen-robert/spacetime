@@ -53,6 +53,26 @@ public class Bullet implements Renderable{
 		// TODO Auto-generated method stub
 		return 4;
 	}
+	
+	public void move(double delta) {
+		switch(bulletdata.getMovementType()) {
+		case "Linear":
+			linearMove(delta);
+			break;
+		case "Homing":
+			//TODO
+			break;
+		case "Sinusoid":
+			//TODO
+			break;
+		case "Controlled":
+			//TODO
+			break;
+		default:
+			System.exit(-847);
+			break;
+		}
+	}
 
 	public void linearMove(double delta) {
 		bulletX += velocityX * delta;
