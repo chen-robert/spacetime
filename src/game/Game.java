@@ -16,10 +16,10 @@ public class Game {
 	ImageLoader imageloader;
 
 	private ArrayList<Renderable> miscRenderables;
-	
+
 	private Ship playerShip;
 	private ArrayList<Bullet> bullets;
-	private ArrayList<Bullet> toRemove;
+	private ArrayList<Bullet> toRemove = new ArrayList<>();
 
 	public Game() {
 		imageloader = new ImageLoader();
@@ -29,23 +29,30 @@ public class Game {
 		miscRenderables.add(playerShip);
 		miscRenderables.add(BackgroundParser.getBackgroundSprite(480, 360));
 	}
-	
-	//ugh
+
+	// ugh
 	public void addBullet(Bullet b) {
 		bullets.add(b);
 	}
-	
-	//UGH
+
+	// UGH
 	public void removeBullet(Bullet b) {
 		toRemove.add(b);
 	}
 
 	public void update() {
 		playerShip.update();
-		toRemove = new ArrayList<Bullet>();
-		for (Bullet bullet : bullets) bullet.update();
-		for (Bullet bullet : toRemove) bullets.remove(bullet);
+		for (Bullet bullet : bullets)
+			bullet.update();
+
+		cleanup();
+	}
+
+	private void cleanup() {
+		for (Bullet bullet : toRemove)
+			bullets.remove(bullet);
 		toRemove.clear();
+
 	}
 
 	public Collection<Renderable> getRenderables() {
