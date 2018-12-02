@@ -15,22 +15,43 @@ public class Game {
 
 	ImageLoader imageloader;
 
-	ArrayList<Renderable> renderables;
-	Ship playerShip;
+	private ArrayList<Renderable> miscRenderables;
+	
+	private Ship playerShip;
+	private ArrayList<Bullet> bullets;
+	private ArrayList<Bullet> toRemove;
 
 	public Game() {
 		imageloader = new ImageLoader();
-		renderables = new ArrayList<Renderable>();
+		miscRenderables = new ArrayList<Renderable>();
 		playerShip = new Ship(new CraftDataImpl());
-		renderables.add(playerShip);
-		renderables.add(BackgroundParser.getBackgroundSprite(480, 360));
+		bullets = new ArrayList<Bullet>();
+		miscRenderables.add(playerShip);
+		miscRenderables.add(BackgroundParser.getBackgroundSprite(480, 360));
+	}
+	
+	//ugh
+	public void addBullet(Bullet b) {
+		bullets.add(b);
+	}
+	
+	//UGH
+	public void removeBullet(Bullet b) {
+		toRemove.add(b);
 	}
 
 	public void update() {
 		playerShip.update();
+		toRemove = new ArrayList<Bullet>();
+		for (Bullet bullet : bullets) bullet.update();
+		for (Bullet bullet : toRemove) bullets.remove(bullet);
+		toRemove.clear();
 	}
 
 	public Collection<Renderable> getRenderables() {
-		return renderables;
+		ArrayList<Renderable> ret = new ArrayList<Renderable>();
+		ret.addAll(miscRenderables);
+		ret.addAll(bullets);
+		return ret;
 	}
 }

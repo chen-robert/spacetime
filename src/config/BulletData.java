@@ -25,7 +25,7 @@ public interface BulletData {
 	double getHitboxRadius();
 	
 	/**
-	 * @return radius of the circular explosion left after expiration
+	 * @return radius of the circular explosion left after detonation
 	 * Note: the explosion ignores walls and such. Plan accordingly.
 	 */
 	double getExplosionRadius();
@@ -58,4 +58,11 @@ public interface BulletData {
 	 * TODO:  Probably want a better name for this btw :|
 	 */
 	double getWallDrag();
+	
+	/**
+	 * The max lifetime of the bullet, after which it will self-destruct
+	 * without an explosion or related items
+	 * @return the max lifetime of the bullet in ticks
+	 */
+	double getMaxLifetime();
 }

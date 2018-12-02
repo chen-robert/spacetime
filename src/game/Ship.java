@@ -4,6 +4,7 @@ import java.awt.Image;
 import java.awt.event.KeyEvent;
 
 import config.BackgroundParser;
+import config.BulletDataImpl;
 import config.CraftData;
 import main.Main;
 import ui.Renderable;
@@ -76,7 +77,7 @@ public class Ship implements Renderable {
 		}
 	}
 
-	public void move(double delta) {
+	private void move(double delta) {
 		shipX += velocityX * delta;
 		shipY += velocityY * delta;
 	}
@@ -84,7 +85,7 @@ public class Ship implements Renderable {
 	/**
 	 * Uses the inputs from KeyAdapter to update its data
 	 */
-	public void processKeys() {
+	private void processKeys() {
 		if (Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_LEFT)) direction += craftdata.getTurnSpeed();
 		if (Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_RIGHT)) direction -= craftdata.getTurnSpeed();
 
@@ -114,10 +115,14 @@ public class Ship implements Renderable {
 			velocityX *= speedscaling;
 			velocityY *= speedscaling;
 		}
-
+		
+		
+		
+		if (Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_SPACE))Main.GAME.addBullet(
+				new Bullet(new BulletDataImpl(), shipX, shipY, direction, craftdata.getDamageMultiplier()));
 	}
 
-	public void collide() {
+	private void collide() {
 		// TOP
 		if (shipY - craftdata.getHitboxRadius() < 0) {
 			shipY = 2 * craftdata.getHitboxRadius() - shipY;

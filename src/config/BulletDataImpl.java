@@ -9,7 +9,7 @@ public class BulletDataImpl implements BulletData{
 
 	@Override
 	public double getInitialSpeed() {
-		return 5.0;
+		return 1.5;
 	}
 	
 	@Override
@@ -42,5 +42,8 @@ public class BulletDataImpl implements BulletData{
 		return -1;
 	}
 
-	
+	@Override
+	public double getMaxLifetime() {
+		return 300;
+	}	
 }

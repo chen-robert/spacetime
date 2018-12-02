@@ -10,18 +10,20 @@ import ui.UI;
 
 public class Main {
 	public static boolean DEBUG = false;
+	
+	public static Game GAME;
 
 	public static final int PORT = 8723;
 	public static final KeyAdapter KEY_ADAPTER = new KeyAdapter();
 
 	public static void main(String args[]) throws InterruptedException {
-		Game g = new Game();
+		GAME = new Game();
 
 		JFrame frame = new JFrame("Spacetime");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		UI ui = new UI();
-		ui.changeFrame(g);
+		ui.changeFrame(GAME);
 		ui.setPreferredSize(new Dimension(UI.FIELD_WIDTH + 2 * UI.SIDE_BUFFER,
 				UI.FIELD_HEIGHT + 2 * UI.SIDE_BUFFER + UI.TOP_BANNER));
 
@@ -38,13 +40,13 @@ public class Main {
 				if (KEY_ADAPTER.isKeyPressed(KeyEvent.VK_V)) {
 					if (debugStep) {
 						debugStep = false;
-						g.update();
+						GAME.update();
 					}
 				} else {
 					debugStep = true;
 				}
 			} else {
-				g.update();
+				GAME.update();
 			}
 			ui.repaint();
 
