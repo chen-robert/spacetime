@@ -119,7 +119,7 @@ public class Ship implements Renderable {
 		}
 
 		if (Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_SPACE))
-			Main.GAME.addBullet(new Bullet("Default", shipX, shipY, direction, craftdata.getDamageMultiplier()));
+			Main.GAME.add(new Bullet("Default", shipX, shipY, direction, craftdata.getDamageMultiplier()));
 	}
 
 	private void collide() {

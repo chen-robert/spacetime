@@ -6,6 +6,7 @@ import java.util.Collection;
 import config.BackgroundParser;
 import config.CraftDataImpl;
 import config.ImageLoader;
+import networking.Serializable;
 import ui.Renderable;
 
 public class Game {
@@ -35,12 +36,26 @@ public class Game {
 		gsl.bind(this);
 	}
 
-	// ugh
-	public void addBullet(Bullet b) {
-		gsl.addObject(b);
+	/**
+	 * Generic "fake add" method where we call
+	 * {@link GameStateListener#addObject(networking.Serializable)}.
+	 * 
+	 * @param obj any serializable object
+	 */
+	public void add(Serializable obj) {
+		gsl.addObject(obj);
 	}
 
-	public void realAddBullet(Bullet b) {
+	/**
+	 * Add a bullet. This will be called by {@link GameStateListener} through
+	 * reflection.
+	 * 
+	 * Note, ensure the method name is strictly "add" + className. For example, if
+	 * we wanted to make a Powerup class, our new method would be called addPowerup.
+	 * 
+	 * @param b
+	 */
+	public void addBullet(Bullet b) {
 		bullets.add(b);
 	}
 
