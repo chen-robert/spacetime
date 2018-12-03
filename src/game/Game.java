@@ -23,17 +23,24 @@ public class Game {
 
 	private GameStateListener gsl;
 
-	public Game() {
+	public Game(GameStateListener gsl) {
 		imageloader = new ImageLoader();
 		miscRenderables = new ArrayList<Renderable>();
 		playerShip = new Ship(new CraftDataImpl());
 		bullets = new ArrayList<Bullet>();
 		miscRenderables.add(playerShip);
 		miscRenderables.add(BackgroundParser.getBackgroundSprite(480, 360));
+
+		this.gsl = gsl;
+		gsl.bind(this);
 	}
 
 	// ugh
 	public void addBullet(Bullet b) {
+		gsl.addObject(b);
+	}
+
+	public void realAddBullet(Bullet b) {
 		bullets.add(b);
 	}
 

@@ -6,18 +6,19 @@ import java.awt.event.KeyEvent;
 import javax.swing.JFrame;
 
 import game.Game;
+import game.GameStateListenerImpl;
 import ui.UI;
 
 public class Main {
 	public static boolean DEBUG = false;
-	
+
 	public static Game GAME;
 
 	public static final int PORT = 8723;
 	public static final KeyAdapter KEY_ADAPTER = new KeyAdapter();
 
 	public static void main(String args[]) throws InterruptedException {
-		GAME = new Game();
+		GAME = new Game(new GameStateListenerImpl());
 
 		JFrame frame = new JFrame("Spacetime");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
