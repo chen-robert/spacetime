@@ -28,8 +28,8 @@ public class GameStateListenerImpl implements GameStateListener {
 	}
 
 	@Override
-	public void bind(Game g) {
-		this.game = g;
+	public void bind(Game game) {
+		this.game = game;
 	}
 
 }
