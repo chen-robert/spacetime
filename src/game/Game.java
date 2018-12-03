@@ -21,6 +21,8 @@ public class Game {
 	private ArrayList<Bullet> bullets;
 	private ArrayList<Bullet> toRemove = new ArrayList<>();
 
+	private GameStateListener gsl;
+
 	public Game() {
 		imageloader = new ImageLoader();
 		miscRenderables = new ArrayList<Renderable>();
@@ -52,7 +54,6 @@ public class Game {
 		for (Bullet bullet : toRemove)
 			bullets.remove(bullet);
 		toRemove.clear();
-
 	}
 
 	public Collection<Renderable> getRenderables() {

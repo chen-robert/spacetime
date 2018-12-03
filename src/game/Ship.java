@@ -4,7 +4,6 @@ import java.awt.Image;
 import java.awt.event.KeyEvent;
 
 import config.BackgroundParser;
-import config.BulletDataImpl;
 import config.CraftData;
 import main.Main;
 import ui.Renderable;
@@ -12,7 +11,7 @@ import ui.UI;
 
 public class Ship implements Renderable {
 	private static final int COLLISION_ACCURACY = 20;
-	private static final double MIN_REBOUND = 0.1;//if traveling slower, no rebound
+	private static final double MIN_REBOUND = 0.1;// if traveling slower, no rebound
 
 	public Ship() {
 	}
@@ -86,8 +85,10 @@ public class Ship implements Renderable {
 	 * Uses the inputs from KeyAdapter to update its data
 	 */
 	private void processKeys() {
-		if (Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_LEFT)) direction += craftdata.getTurnSpeed();
-		if (Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_RIGHT)) direction -= craftdata.getTurnSpeed();
+		if (Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_LEFT))
+			direction += craftdata.getTurnSpeed();
+		if (Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_RIGHT))
+			direction -= craftdata.getTurnSpeed();
 
 		if (Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_UP)) {
 			velocityX += craftdata.getAcceleration() * Math.cos(getDirectionRadians());
@@ -99,12 +100,13 @@ public class Ship implements Renderable {
 		}
 
 		netvelocity = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
-		
-		//slowdown if no movement
+
+		// slowdown if no movement
 		if ((!Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_UP)) && (!Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_DOWN))
 				&& netvelocity > 0) {
 			double newvelocity = netvelocity - craftdata.getDeceleration();
-			if (newvelocity < 0) newvelocity = 0;
+			if (newvelocity < 0)
+				newvelocity = 0;
 			double slowscaling = newvelocity / netvelocity;
 			velocityX *= slowscaling;
 			velocityY *= slowscaling;
@@ -115,11 +117,9 @@ public class Ship implements Renderable {
 			velocityX *= speedscaling;
 			velocityY *= speedscaling;
 		}
-		
-		
-		
-		if (Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_SPACE))Main.GAME.addBullet(
-				new Bullet(new BulletDataImpl(), shipX, shipY, direction, craftdata.getDamageMultiplier()));
+
+		if (Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_SPACE))
+			Main.GAME.addBullet(new Bullet("Default", shipX, shipY, direction, craftdata.getDamageMultiplier()));
 	}
 
 	private void collide() {
@@ -181,7 +181,8 @@ public class Ship implements Renderable {
 				break;
 			case 1:
 				for (int i = 0; i < 8; i++) {
-					if (hasCollides[i]) reflectEstimateD = 45 * i;
+					if (hasCollides[i])
+						reflectEstimateD = 45 * i;
 				}
 				if (reflectEstimateD == -1) {
 					System.out.println("what the actual heccc");
@@ -190,17 +191,16 @@ public class Ship implements Renderable {
 				break;
 			case 2:
 				/*
-				for (int i = 0; i < 4; i++) {
-					if (hasCollides[2 * i + 1]) reflectEstimateD = 45 + 90 * i;
-				}
-				if (reflectEstimateD == -1) {
-				*/
+				 * for (int i = 0; i < 4; i++) { if (hasCollides[2 * i + 1]) reflectEstimateD =
+				 * 45 + 90 * i; } if (reflectEstimateD == -1) {
+				 */
 				double suma = 0;
 				for (int j = 0; j < 8; j++)
-					if (hasCollides[j])suma += j;
+					if (hasCollides[j])
+						suma += j;
 				suma /= 2;
 				reflectEstimateD = 45 * suma;
-				//}
+				// }
 				break;
 			case 3:
 				for (int i = 0; i < 8; i++) {
@@ -211,7 +211,8 @@ public class Ship implements Renderable {
 				if (reflectEstimateD == -1) {
 					double sum = 0;
 					for (int j = 0; j < 8; j++)
-						if (hasCollides[j])sum += j;
+						if (hasCollides[j])
+							sum += j;
 					sum /= 3;
 					reflectEstimateD = 45 * sum;
 				}
@@ -219,26 +220,29 @@ public class Ship implements Renderable {
 			default:
 				double sum = 0;
 				for (int j = 0; j < 8; j++)
-					if (hasCollides[j])sum += j;
+					if (hasCollides[j])
+						sum += j;
 				sum /= numCollides;
 				reflectEstimateD = 45 * sum;
 				break;
 			}
 			double reflectEstimateR = Math.toRadians(reflectEstimateD);
-			
-			move(0.0 - 1.0/COLLISION_ACCURACY);
+
+			move(0.0 - 1.0 / COLLISION_ACCURACY);
 
 			double prevVelocity = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
-			if (Math.abs(velocityX) < 0.2) velocityX = 0;
-			if (Math.abs(velocityY) < 0.2) velocityY = 0;
+			if (Math.abs(velocityX) < 0.2)
+				velocityX = 0;
+			if (Math.abs(velocityY) < 0.2)
+				velocityY = 0;
 			double currentAngle = Math.atan2(0 - velocityY, velocityX);
-			if (currentAngle < 0) currentAngle += 2 * Math.PI;
+			if (currentAngle < 0)
+				currentAngle += 2 * Math.PI;
 			currentAngle = 2 * reflectEstimateR + Math.PI - currentAngle;
-			
-			
+
 			velocityX = prevVelocity * craftdata.getRebound() * Math.cos(currentAngle);
 			velocityY = -1 * prevVelocity * craftdata.getRebound() * Math.sin(currentAngle);
-			//if the ship is too slow to rebound, stop it
+			// if the ship is too slow to rebound, stop it
 			if (prevVelocity * craftdata.getRebound() < MIN_REBOUND) {
 				velocityX = 0;
 				velocityY = 0;

@@ -28,6 +28,10 @@ public class Util {
 		return ret;
 	}
 
+	public static int toInt(byte[] b, int offset) {
+		return toInt(new byte[] { b[offset], b[offset + 1], b[offset + 2], b[offset + 3] });
+	}
+
 	/**
 	 * Converts a byte array back into an integer. Reverse of
 	 * {@link Util#toBytes(int)}
@@ -91,6 +95,20 @@ public class Util {
 		int len = Arrays.stream(arr).mapToInt(a -> a.length).sum();
 
 		T[] ret = (T[]) new Object[len];
+
+		int copied = 0;
+		for (int i = 0; i < arr.length; i++) {
+			System.arraycopy(arr[i], 0, ret, copied, arr[i].length);
+			copied += arr[i].length;
+		}
+
+		return ret;
+	}
+
+	public static byte[] concat(byte[]... arr) {
+		int len = Arrays.stream(arr).mapToInt(a -> a.length).sum();
+
+		byte[] ret = new byte[len];
 
 		int copied = 0;
 		for (int i = 0; i < arr.length; i++) {
