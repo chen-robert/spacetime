@@ -56,7 +56,10 @@ public class Game {
 	 * @param b
 	 */
 	public void addBullet(Bullet b) {
-		bullets.add(b);
+
+		synchronized (bullets) {
+			bullets.add(b);
+		}
 	}
 
 	// UGH
@@ -66,15 +69,19 @@ public class Game {
 
 	public void update() {
 		playerShip.update();
-		for (Bullet bullet : bullets)
-			bullet.update();
+		synchronized (bullets) {
+			for (Bullet bullet : bullets)
+				bullet.update();
+		}
 
 		cleanup();
 	}
 
 	private void cleanup() {
-		for (Bullet bullet : toRemove)
-			bullets.remove(bullet);
+		synchronized (bullets) {
+			for (Bullet bullet : toRemove)
+				bullets.remove(bullet);
+		}
 		toRemove.clear();
 	}
 

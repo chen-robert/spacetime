@@ -30,6 +30,7 @@ public class ServerHub implements SocketListener {
 	public boolean addSocket(Socket s) {
 		try {
 			SocketData curr = new SocketData(s);
+			sockets.add(curr);
 
 			curr.in.addListener((header, data) -> sendAll(header, data));
 		} catch (IOException e) {
@@ -41,7 +42,6 @@ public class ServerHub implements SocketListener {
 	public void sendAll(String header, byte[] data) {
 		sockets.forEach(sd -> {
 			try {
-
 				sd.out.writeWarn(header, data);
 			} catch (IOException ioe) {
 				try {

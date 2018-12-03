@@ -8,15 +8,18 @@ import networking.client.Client;
 
 public class GameStateListenerImpl implements GameStateListener {
 	private Game game;
+	private Client client;
 
 	public GameStateListenerImpl() {
 		Client.startServer();
 
+		this.client = new Client();
+		client.bind((header, data) -> onLoad(header, data));
 	}
 
 	@Override
 	public void addObject(Serializable obj) {
-		onLoad(obj.getClass().getName(), obj.toBytes());
+		client.write(obj.getClass().getName(), obj.toBytes());
 	}
 
 	public void onLoad(String className, byte[] data) {

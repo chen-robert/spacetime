@@ -7,6 +7,7 @@ import java.net.Socket;
 
 import io.EncodedOutputStream;
 import io.EncodedReader;
+import io.PacketListener;
 import networking.server.ServerHub;
 import networking.server.ServerThread;
 
@@ -16,12 +17,12 @@ public class Client {
 	private EncodedReader in;
 
 	public static void startServer() {
-		new ServerThread(PORT, new ServerHub());
+		new Thread(new ServerThread(PORT, new ServerHub())).start();
 	}
 
 	public Client() {
 		try {
-			s = new Socket("", PORT);
+			s = new Socket("127.0.0.1", PORT);
 
 			out = new EncodedOutputStream(s.getOutputStream());
 			in = new EncodedReader(s.getInputStream());
@@ -30,5 +31,13 @@ public class Client {
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
+	}
+
+	public void write(String header, byte[]... data) {
+		out.write(header, data);
+	}
+
+	public void bind(PacketListener pl) {
+		in.addListener(pl);
 	}
 }
