@@ -55,7 +55,7 @@ public class Ship implements Renderable {
 
 	@Override
 	public int getRenderPriority() {
-		return 3;// can be changed later
+		return 1;// can be changed later
 	}
 
 	@Override

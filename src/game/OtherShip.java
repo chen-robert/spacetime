@@ -41,8 +41,7 @@ public class OtherShip implements Renderable {
 
 	@Override
 	public int getRenderPriority() {
-		// TODO Auto-generated method stub
-		return 3;
+		return 1;
 	}
 
 	@Override
