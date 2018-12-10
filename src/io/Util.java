@@ -28,6 +28,15 @@ public class Util {
 		return ret;
 	}
 
+	public static byte[] toBytes(int... nums) {
+		byte[][] ret = new byte[nums.length][];
+		for (int i = 0; i < nums.length; i++) {
+			ret[i] = Util.toBytes(nums[i]);
+		}
+
+		return Util.concat(ret);
+	}
+
 	public static int toInt(byte[] b, int offset) {
 		return toInt(new byte[] { b[offset], b[offset + 1], b[offset + 2], b[offset + 3] });
 	}
@@ -64,8 +73,7 @@ public class Util {
 	 * @return joined string
 	 */
 	public static String join(String[] s, String separator) {
-		if (s.length == 0)
-			return "";
+		if (s.length == 0) return "";
 
 		StringBuilder ret = new StringBuilder(s[0]);
 		for (int i = 1; i < s.length; i++) {

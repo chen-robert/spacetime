@@ -3,6 +3,7 @@ package game;
 import java.awt.Image;
 
 import config.ImageLoader;
+import io.Util;
 import networking.Serializable;
 import ui.Renderable;
 
@@ -60,12 +61,22 @@ public class OtherShip implements Renderable, Serializable {
 
 	@Override
 	public byte[] toBytes() {
-		// TODO Auto-generated method stub
-		return null;
+		return Util.concat(//
+				Util.toBytes((int) renderX, (int) renderY, (int) direction, (int) speed), //
+				Util.toBytes(name.length()), //
+				name.getBytes());
 	}
 
 	public OtherShip(byte[] b) {
+		int x = Util.toInt(b, 0);
+		int y = Util.toInt(b, 1 * 4);
+		int dir = Util.toInt(b, 2 * 4);
+		int spd = Util.toInt(b, 3 * 4);
 
+		int strLen = Util.toInt(b, 4 * 4);
+		String name = new String(b, 5 * 4, strLen);
+
+		construct(x, y, dir, spd, name);
 	}
 
 }
