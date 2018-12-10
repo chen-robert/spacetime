@@ -10,6 +10,8 @@ public class GameStateListenerImpl implements GameStateListener {
 	private Game game;
 	private Client client;
 
+	private boolean loaded = false;
+
 	public GameStateListenerImpl() {
 		Client.startServer();
 
@@ -23,6 +25,7 @@ public class GameStateListenerImpl implements GameStateListener {
 	}
 
 	public void onLoad(String className, byte[] data) {
+		if (!loaded) return;
 		try {
 			String simpleName = className.substring(className.lastIndexOf('.') + 1);
 			Method addObj = game.getClass().getMethod("add" + simpleName, Class.forName(className));
@@ -39,6 +42,7 @@ public class GameStateListenerImpl implements GameStateListener {
 	@Override
 	public void bind(Game game) {
 		this.game = game;
+		this.loaded = true;
 	}
 
 }
