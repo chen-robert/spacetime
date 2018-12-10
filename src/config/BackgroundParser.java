@@ -52,7 +52,7 @@ public class BackgroundParser {
 	}
 
 	public static boolean[][] getBackgroundCollisions(int width, int height) {
-		if (cachedCollisions == null) {
+		if (cachedCollisions == null || cachedCollisions.length != width || cachedCollisions[0].length != height) {
 			cachedCollisions = generateBackgroundCollisions(width, height);
 		}
 		return cachedCollisions;
