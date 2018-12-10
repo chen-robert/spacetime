@@ -74,8 +74,9 @@ public class Bullet implements Renderable, Serializable {
 
 	@Override
 	public int getRenderPriority() {
-		// TODO Auto-generated method stub
-		return 4;
+		if (bulletdata.getWallDrag() == -1)
+			return 3;
+		else return 6;
 	}
 
 	public void update() {

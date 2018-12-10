@@ -40,7 +40,7 @@ public class BackgroundParser {
 
 			@Override
 			public int getRenderPriority() {
-				return 1;
+				return 4;
 			}
 
 			@Override

@@ -49,8 +49,7 @@ public class OtherShip implements Renderable, Serializable {
 
 	@Override
 	public int getRenderPriority() {
-		// TODO Auto-generated method stub
-		return 3;
+		return 1;
 	}
 
 	@Override

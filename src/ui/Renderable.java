@@ -49,6 +49,14 @@ public interface Renderable {
 	 * Returns priority for rendering. Higher priority items get rendered on top
 	 * (get rendered later). For example, background is probably low priority.
 	 * 
+	 * Current setup:
+	 * Ship = 1 (Rendered first, everything else drawn over)
+	 * Items = 2
+	 * Non-wallpiercing bullets = 3
+	 * Walls = 4
+	 * Lasers = 5
+	 * Wallpiercing bullets = 6
+	 * 
 	 * @return render priority as an integer
 	 */
 	public int getRenderPriority();
