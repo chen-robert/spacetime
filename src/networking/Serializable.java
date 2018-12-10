@@ -48,4 +48,5 @@ public interface Serializable {
 	 * @return byte array representing the object
 	 */
 	public byte[] toBytes();
+
 }

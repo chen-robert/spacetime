@@ -2,6 +2,7 @@ package game;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 import config.BackgroundParser;
 import config.CraftDataImpl;
@@ -56,9 +57,18 @@ public class Game {
 	 * @param b
 	 */
 	public void addBullet(Bullet b) {
-
 		synchronized (bullets) {
 			bullets.add(b);
+		}
+	}
+
+	public void addOtherShip(OtherShip s) {
+		synchronized (miscRenderables) {
+			Collection<Renderable> dupes = miscRenderables.stream()
+					.filter(r -> r instanceof OtherShip && ((OtherShip) r).getId().equals(s.getId()))
+					.collect(Collectors.toList());
+			dupes.forEach(dupe -> miscRenderables.remove(dupe));
+			miscRenderables.add(s);
 		}
 	}
 
@@ -69,6 +79,8 @@ public class Game {
 
 	public void update() {
 		playerShip.update();
+		add(playerShip.getOtherShip());
+
 		synchronized (bullets) {
 			for (Bullet bullet : bullets)
 				bullet.update();
