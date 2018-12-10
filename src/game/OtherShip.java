@@ -12,14 +12,17 @@ public class OtherShip implements Renderable, Serializable {
 	private double renderX, renderY;
 	private double direction, speed;
 	private String name;
+	private String id;
 
-	public OtherShip(double x, double y, double dir, double spd, String name) {
+	public OtherShip(double x, double y, double dir, double spd, String id, String name) {
 		this.name = name;
 
-		construct(x, y, dir, spd, name);
+		construct(x, y, dir, spd, id, name);
 	}
 
-	private void construct(double x, double y, double dir, double spd, String name) {
+	private void construct(double x, double y, double dir, double spd, String id, String name) {
+		this.id = id;
+
 		selfImage = ImageLoader.getImg(name + "-e");
 		renderX = x;
 		renderY = y;
@@ -63,8 +66,9 @@ public class OtherShip implements Renderable, Serializable {
 	public byte[] toBytes() {
 		return Util.concat(//
 				Util.toBytes((int) renderX, (int) renderY, (int) direction, (int) speed), //
-				Util.toBytes(name.length()), //
-				name.getBytes());
+				Util.toBytes(name.length(), id.length()), //
+				name.getBytes(), //
+				id.getBytes());
 	}
 
 	public OtherShip(byte[] b) {
@@ -74,9 +78,16 @@ public class OtherShip implements Renderable, Serializable {
 		int spd = Util.toInt(b, 3 * 4);
 
 		int strLen = Util.toInt(b, 4 * 4);
-		String name = new String(b, 5 * 4, strLen);
+		int idLen = Util.toInt(b, 5 * 4);
+		String name = new String(b, 6 * 4, strLen);
+		String id = new String(b, 6 * 4 + strLen, idLen);
 
-		construct(x, y, dir, spd, name);
+		construct(x, y, dir, spd, id, name);
+	}
+
+	@Override
+	public String getId() {
+		return id;
 	}
 
 }

@@ -6,10 +6,13 @@ import java.awt.event.KeyEvent;
 import config.BackgroundParser;
 import config.CraftData;
 import main.Main;
+import networking.Serializable;
 import ui.Renderable;
 import ui.UI;
 
 public class Ship implements Renderable {
+	public static final String ID = Serializable.generateId();
+
 	private static final int COLLISION_ACCURACY = 20;
 	private static final double MIN_REBOUND = 0.1;// if traveling slower, no rebound
 
@@ -67,10 +70,10 @@ public class Ship implements Renderable {
 	public double getDirectionRadians() {
 		return Math.toRadians(direction);
 	}
-	
+
 	public OtherShip getOtherShip() {
-		return new OtherShip(shipX, shipY, direction, 
-				Math.sqrt(velocityX * velocityX + velocityY * velocityY), craftdata.getName());
+		return new OtherShip(shipX, shipY, direction, Math.sqrt(velocityX * velocityX + velocityY * velocityY), ID,
+				craftdata.getName());
 	}
 
 	public void update() {
@@ -90,10 +93,8 @@ public class Ship implements Renderable {
 	 * Uses the inputs from KeyAdapter to update its data
 	 */
 	private void processKeys() {
-		if (Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_LEFT))
-			direction += craftdata.getTurnSpeed();
-		if (Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_RIGHT))
-			direction -= craftdata.getTurnSpeed();
+		if (Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_LEFT)) direction += craftdata.getTurnSpeed();
+		if (Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_RIGHT)) direction -= craftdata.getTurnSpeed();
 
 		if (Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_UP)) {
 			velocityX += craftdata.getAcceleration() * Math.cos(getDirectionRadians());
@@ -110,8 +111,7 @@ public class Ship implements Renderable {
 		if ((!Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_UP)) && (!Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_DOWN))
 				&& netvelocity > 0) {
 			double newvelocity = netvelocity - craftdata.getDeceleration();
-			if (newvelocity < 0)
-				newvelocity = 0;
+			if (newvelocity < 0) newvelocity = 0;
 			double slowscaling = newvelocity / netvelocity;
 			velocityX *= slowscaling;
 			velocityY *= slowscaling;
@@ -186,8 +186,7 @@ public class Ship implements Renderable {
 				break;
 			case 1:
 				for (int i = 0; i < 8; i++) {
-					if (hasCollides[i])
-						reflectEstimateD = 45 * i;
+					if (hasCollides[i]) reflectEstimateD = 45 * i;
 				}
 				if (reflectEstimateD == -1) {
 					System.out.println("what the actual heccc");
@@ -201,8 +200,7 @@ public class Ship implements Renderable {
 				 */
 				double suma = 0;
 				for (int j = 0; j < 8; j++)
-					if (hasCollides[j])
-						suma += j;
+					if (hasCollides[j]) suma += j;
 				suma /= 2;
 				reflectEstimateD = 45 * suma;
 				// }
@@ -216,8 +214,7 @@ public class Ship implements Renderable {
 				if (reflectEstimateD == -1) {
 					double sum = 0;
 					for (int j = 0; j < 8; j++)
-						if (hasCollides[j])
-							sum += j;
+						if (hasCollides[j]) sum += j;
 					sum /= 3;
 					reflectEstimateD = 45 * sum;
 				}
@@ -225,8 +222,7 @@ public class Ship implements Renderable {
 			default:
 				double sum = 0;
 				for (int j = 0; j < 8; j++)
-					if (hasCollides[j])
-						sum += j;
+					if (hasCollides[j]) sum += j;
 				sum /= numCollides;
 				reflectEstimateD = 45 * sum;
 				break;
@@ -236,13 +232,10 @@ public class Ship implements Renderable {
 			move(0.0 - 1.0 / COLLISION_ACCURACY);
 
 			double prevVelocity = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
-			if (Math.abs(velocityX) < 0.2)
-				velocityX = 0;
-			if (Math.abs(velocityY) < 0.2)
-				velocityY = 0;
+			if (Math.abs(velocityX) < 0.2) velocityX = 0;
+			if (Math.abs(velocityY) < 0.2) velocityY = 0;
 			double currentAngle = Math.atan2(0 - velocityY, velocityX);
-			if (currentAngle < 0)
-				currentAngle += 2 * Math.PI;
+			if (currentAngle < 0) currentAngle += 2 * Math.PI;
 			currentAngle = 2 * reflectEstimateR + Math.PI - currentAngle;
 
 			velocityX = prevVelocity * craftdata.getRebound() * Math.cos(currentAngle);

@@ -63,6 +63,8 @@ public class Game {
 	}
 
 	public void addOtherShip(OtherShip s) {
+		if (s.getId().equals(Ship.ID)) return;
+
 		synchronized (miscRenderables) {
 			Collection<Renderable> dupes = miscRenderables.stream()
 					.filter(r -> r instanceof OtherShip && ((OtherShip) r).getId().equals(s.getId()))
