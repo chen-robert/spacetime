@@ -67,6 +67,11 @@ public class Ship implements Renderable {
 	public double getDirectionRadians() {
 		return Math.toRadians(direction);
 	}
+	
+	public OtherShip getOtherShip() {
+		return new OtherShip(shipX, shipY, direction, 
+				Math.sqrt(velocityX * velocityX + velocityY * velocityY), craftdata.getName());
+	}
 
 	public void update() {
 		processKeys();
