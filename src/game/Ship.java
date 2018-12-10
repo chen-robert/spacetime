@@ -118,7 +118,7 @@ public class Ship implements Renderable {
 			velocityY *= speedscaling;
 		}
 
-		if (Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_SPACE))
+		if (Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_Z))
 			Main.GAME.add(new Bullet("Default", shipX, shipY, direction, craftdata.getDamageMultiplier()));
 	}
 

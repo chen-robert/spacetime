@@ -12,6 +12,7 @@ public class ImageLoader {
 	private final static String RESOURCE_PATH = "resources/";
 	static {
 		loadImage("Test", "sprites/craft_test.png");
+		loadImage("Test-e", "sprites/craft_test-e.png");
 		
 		loadImage("Red Pellet", "bullets/pellet_red.png");
 	}
