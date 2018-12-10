@@ -1,6 +1,7 @@
 package config;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -60,7 +61,12 @@ public class BackgroundParser {
 
 	public static boolean[][] generateBackgroundCollisions(int width, int height) {
 		BufferedImage copy = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		copy.getGraphics().drawImage(test, 0, 0, width, height, null);
+
+		Graphics g = copy.getGraphics();
+		g.setColor(Color.WHITE);
+		g.fillRect(0, 0, width, height);
+
+		g.drawImage(test, 0, 0, width, height, null);
 
 		boolean[][] ret = new boolean[width][height];
 		for (int i = 0; i < width; i++) {
