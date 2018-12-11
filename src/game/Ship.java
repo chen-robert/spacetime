@@ -232,8 +232,8 @@ public class Ship implements Renderable {
 			move(0.0 - 1.0 / COLLISION_ACCURACY);
 
 			double prevVelocity = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
-			if (Math.abs(velocityX) < 0.2) velocityX = 0;
-			if (Math.abs(velocityY) < 0.2) velocityY = 0;
+			if (Math.abs(velocityX) < 0.05) velocityX = 0;
+			if (Math.abs(velocityY) < 0.05) velocityY = 0;
 			double currentAngle = Math.atan2(0 - velocityY, velocityX);
 			if (currentAngle < 0) currentAngle += 2 * Math.PI;
 			currentAngle = 2 * reflectEstimateR + Math.PI - currentAngle;
