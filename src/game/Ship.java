@@ -136,8 +136,8 @@ public class Ship implements Renderable {
 		}
 
 		// BOTTOM
-		if (shipY + craftdata.getHitboxRadius() > UI.FIELD_HEIGHT) {
-			shipY = 2 * UI.FIELD_HEIGHT - 2 * craftdata.getHitboxRadius() - shipY;
+		if (shipY + craftdata.getHitboxRadius() > (UI.FIELD_HEIGHT-1)) {
+			shipY = 2 * (UI.FIELD_HEIGHT-1) - 2 * craftdata.getHitboxRadius() - shipY;
 			velocityX *= craftdata.getRebound();
 			velocityY *= -1 * craftdata.getRebound();
 		}
@@ -151,7 +151,7 @@ public class Ship implements Renderable {
 
 		// RIGHT
 		if (shipX + craftdata.getHitboxRadius() > UI.FIELD_WIDTH) {
-			shipX = 2 * UI.FIELD_WIDTH - 2 * craftdata.getHitboxRadius() - shipX;
+			shipX = 2 * (UI.FIELD_WIDTH-1) - 2 * craftdata.getHitboxRadius() - shipX;
 			velocityX *= -1 * craftdata.getRebound();
 			velocityY *= craftdata.getRebound();
 		}

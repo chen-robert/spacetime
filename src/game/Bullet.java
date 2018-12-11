@@ -4,6 +4,7 @@ import static io.Util.concat;
 
 import java.awt.Image;
 
+import config.BackgroundParser;
 import config.BulletData;
 import config.DataLoader;
 import io.Util;
@@ -18,6 +19,10 @@ public class Bullet extends SerializableObject implements Renderable {
 	 * how far at max each bullet goes
 	 */
 	private final double COLLISION_STEP = 1.0;
+	/**
+	 * the minimum speed a bullet can go to rebound
+	 */
+	private final double MIN_REBOUND = 0.2;
 
 	public Bullet(String name, double initialX, double initialY, double directionDegrees, double dm) {
 		this.name = name;
@@ -90,12 +95,12 @@ public class Bullet extends SerializableObject implements Renderable {
 		double distToCover = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
 		while (distToCover > COLLISION_STEP) {
 			move(COLLISION_STEP);
-			wallCollide();
+			wallCollide(COLLISION_STEP);
 			distToCover -= COLLISION_STEP;
 		}
 		if (distToCover > 0) {
 			move(distToCover);
-			wallCollide();
+			wallCollide(distToCover);
 		}
 
 		objectCollide();
@@ -127,7 +132,7 @@ public class Bullet extends SerializableObject implements Renderable {
 		bulletY += velocityY * delta;
 	}
 
-	private void wallCollide() {
+	private void wallCollide(double adjustment) {
 		// everyone bounces on the border, so let's handle that first
 		// TOP
 		if (bulletY - bulletdata.getHitboxRadius() < 0) {
@@ -136,8 +141,8 @@ public class Bullet extends SerializableObject implements Renderable {
 		}
 
 		// BOTTOM
-		if (bulletY + bulletdata.getHitboxRadius() > UI.FIELD_HEIGHT) {
-			bulletY = 2 * UI.FIELD_HEIGHT - 2 * bulletdata.getHitboxRadius() - bulletY;
+		if (bulletY + bulletdata.getHitboxRadius() > (UI.FIELD_HEIGHT-1)) {
+			bulletY = 2 * (UI.FIELD_HEIGHT-1) - 2 * bulletdata.getHitboxRadius() - bulletY;
 			velocityY *= -1;
 		}
 
@@ -148,12 +153,150 @@ public class Bullet extends SerializableObject implements Renderable {
 		}
 
 		// RIGHT
-		if (bulletX + bulletdata.getHitboxRadius() > UI.FIELD_WIDTH) {
-			bulletX = 2 * UI.FIELD_WIDTH - 2 * bulletdata.getHitboxRadius() - bulletX;
+		if (bulletX + bulletdata.getHitboxRadius() > (UI.FIELD_WIDTH-1)) {
+			bulletX = 2 * (UI.FIELD_WIDTH-1) - 2 * bulletdata.getHitboxRadius() - bulletX;
 			velocityX *= -1;
 		}
 
 		if (bulletdata.getRebound() != -1) {// does not pass but bounces
+			boolean[][] hitArray = BackgroundParser.getBackgroundCollisions(480, 360);
+			boolean foundCollision = false;
+			for (int angleIterator = 0; angleIterator < 8; angleIterator++) {
+				double testX = bulletX + bulletdata.getHitboxRadius() * Math.cos(Math.PI / 4 * angleIterator);
+				double testY = bulletY - bulletdata.getHitboxRadius() * Math.sin(Math.PI / 4 * angleIterator);
+
+				if (hitArray[(int) testX][(int) testY]) {
+					foundCollision = true;
+				}
+			}
+
+			// if this screws up, fix the heuristic accordingly
+			if (foundCollision) {
+				int numCollides = 0;
+				boolean[] hasCollides = new boolean[8];
+				for (int angleIterator = 0; angleIterator < 8; angleIterator++) {
+					double testX = bulletX + bulletdata.getHitboxRadius() * Math.cos(Math.PI / 4 * angleIterator);
+					double testY = bulletY - bulletdata.getHitboxRadius() * Math.sin(Math.PI / 4 * angleIterator);
+					if (hitArray[(int) testX][(int) testY]) {
+						hasCollides[angleIterator] = true;
+						numCollides++;
+					}
+				}
+
+				double reflectEstimateD = -1;
+				switch (numCollides) {
+				case 0:
+					System.exit(-69);
+					break;
+				case 1:
+					for (int i = 0; i < 8; i++) {
+						if (hasCollides[i]) reflectEstimateD = 45 * i;
+					}
+					if (reflectEstimateD == -1) {
+						System.out.println("what the actual heccc");
+						System.exit(-6969);
+					}
+					break;
+				case 2:
+					/*
+					 * for (int i = 0; i < 4; i++) { if (hasCollides[2 * i + 1]) reflectEstimateD =
+					 * 45 + 90 * i; } if (reflectEstimateD == -1) {
+					 */
+					double suma = 0;
+					for (int j = 0; j < 8; j++)
+						if (hasCollides[j]) suma += j;
+					suma /= 2;
+					reflectEstimateD = 45 * suma;
+					// }
+					break;
+				case 3:
+					for (int i = 0; i < 8; i++) {
+						if (hasCollides[(i + 7) % 8] && hasCollides[i] && hasCollides[(i + 1) % 8]) {
+							reflectEstimateD = 45 * i;
+						}
+					}
+					if (reflectEstimateD == -1) {
+						double sum = 0;
+						for (int j = 0; j < 8; j++)
+							if (hasCollides[j]) sum += j;
+						sum /= 3;
+						reflectEstimateD = 45 * sum;
+					}
+					break;
+				default:
+					double sum = 0;
+					for (int j = 0; j < 8; j++)
+						if (hasCollides[j]) sum += j;
+					sum /= numCollides;
+					reflectEstimateD = 45 * sum;
+					break;
+				}
+				double reflectEstimateR = Math.toRadians(reflectEstimateD);
+
+				move(-1.0 * adjustment);
+
+				double prevVelocity = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
+				if (Math.abs(velocityX) < 0.2) velocityX = 0;
+				if (Math.abs(velocityY) < 0.2) velocityY = 0;
+				double currentAngle = Math.atan2(0 - velocityY, velocityX);
+				if (currentAngle < 0) currentAngle += 2 * Math.PI;
+				currentAngle = 2 * reflectEstimateR + Math.PI - currentAngle;
+
+				velocityX = prevVelocity * bulletdata.getRebound() * Math.cos(currentAngle);
+				velocityY = -1 * prevVelocity * bulletdata.getRebound() * Math.sin(currentAngle);
+				// if the BULLET is too slow to rebound, KILL it
+				if (prevVelocity * bulletdata.getRebound() < MIN_REBOUND) {
+					Main.GAME.removeBullet(this);
+					return;
+				}
+			}
+			/*
+			//IMPORTANT:
+			//getRenderX() and Y() are used here in place of (int)X.
+			//It is not to do rendering, etc, only for convenience
+			if (getRenderX() > 0 && getRenderX() < (UI.FIELD_WIDTH-1) && 
+					getRenderY() > 0 && getRenderY() < (UI.FIELD_HEIGHT-1)) {
+				if (BackgroundParser.getBackgroundCollisions(480, 360)[getRenderX()][getRenderY()]) {
+					//the CENTER of our bullet has collided with a wall
+					/**
+					 * an array that iterates on how far we consider the pixels left and right
+					 *
+					int[] xDeltas = new int[] {1, 1, 0, -1, -1, -1, 0, 1};
+					int[] yDeltas = new int[] {0, -1, -1, -1, 0, 1, 1, 1};
+					int touchCount = 0;
+					double averageDegree = 0;
+					for (int i = 0; i < 8; i++) {
+						if (BackgroundParser.getBackgroundCollisions(480, 360)
+								[getRenderX() + xDeltas[i]][getRenderY() + yDeltas[i]]) {
+							touchCount++;
+							averageDegree += 45 * i;
+						}
+					}
+					if (touchCount == 0) {
+						System.err.println("REALLY bad walls");
+						System.exit(-111101111);
+					}
+					
+					averageDegree /= touchCount;
+					double averageRadians = Math.toRadians(averageDegree);
+					
+					move(-1 * adjustment);
+					
+					double prevVelocity = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
+					if (Math.abs(velocityX) < 0.05) velocityX = 0;
+					if (Math.abs(velocityY) < 0.05) velocityY = 0;
+					double currentAngle = Math.atan2(0 - velocityY, velocityX);
+					if (currentAngle < 0) currentAngle += 2 * Math.PI;
+					currentAngle = 2 * averageRadians + Math.PI - currentAngle;
+					
+					velocityX = prevVelocity * bulletdata.getRebound() * Math.cos(currentAngle);
+					velocityY = -1 * prevVelocity * bulletdata.getRebound() * Math.sin(currentAngle);
+					// if the bullet is too slow to rebound, kill it
+					if (prevVelocity * bulletdata.getRebound() < MIN_REBOUND) {
+						Main.GAME.removeBullet(this);
+					}
+				}
+			}*/
 
 		} else {
 			if (bulletdata.getWallDrag() == -1) {// pops on contact with walls

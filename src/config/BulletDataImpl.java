@@ -34,7 +34,7 @@ public class BulletDataImpl implements BulletData{
 	
 	@Override
 	public double getRebound() {
-		return -1;
+		return 0.9;
 	}
 
 	@Override
