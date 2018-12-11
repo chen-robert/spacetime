@@ -8,11 +8,11 @@ import config.BulletData;
 import config.DataLoader;
 import io.Util;
 import main.Main;
-import networking.Serializable;
+import networking.SerializableObject;
 import ui.Renderable;
 import ui.UI;
 
-public class Bullet implements Renderable, Serializable {
+public class Bullet extends SerializableObject implements Renderable {
 	// HARDCODED VARIABLES
 	/**
 	 * how far at max each bullet goes
@@ -76,7 +76,8 @@ public class Bullet implements Renderable, Serializable {
 	public int getRenderPriority() {
 		if (bulletdata.getWallDrag() == -1)
 			return 3;
-		else return 6;
+		else
+			return 6;
 	}
 
 	public void update() {
@@ -157,7 +158,8 @@ public class Bullet implements Renderable, Serializable {
 		} else {
 			if (bulletdata.getWallDrag() == -1) {// pops on contact with walls
 				// TODO
-			} else {// passes through walls; calculate speed loss from walls, and if <= 0 kill
+			} else {// passes through walls; calculate speed loss from walls,
+					// and if <= 0 kill
 					// itself
 					// TODO
 			}

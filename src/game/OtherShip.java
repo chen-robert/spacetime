@@ -4,10 +4,10 @@ import java.awt.Image;
 
 import config.ImageLoader;
 import io.Util;
-import networking.Serializable;
+import networking.SerializableObject;
 import ui.Renderable;
 
-public class OtherShip implements Renderable, Serializable {
+public class OtherShip extends SerializableObject implements Renderable {
 	private Image selfImage;
 	private double renderX, renderY;
 	private double direction, speed;

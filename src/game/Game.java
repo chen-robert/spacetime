@@ -40,8 +40,9 @@ public class Game {
 	/**
 	 * Generic "fake add" method where we call
 	 * {@link GameStateListener#addObject(networking.Serializable)}.
-	 * 
-	 * @param obj any serializable object
+	 *
+	 * @param obj
+	 *            any serializable object
 	 */
 	public void add(Serializable obj) {
 		gsl.addObject(obj);
@@ -50,10 +51,11 @@ public class Game {
 	/**
 	 * Add a bullet. This will be called by {@link GameStateListener} through
 	 * reflection.
-	 * 
-	 * Note, ensure the method name is strictly "add" + className. For example, if
-	 * we wanted to make a Powerup class, our new method would be called addPowerup.
-	 * 
+	 *
+	 * Note, ensure the method name is strictly "add" + className. For example,
+	 * if we wanted to make a Powerup class, our new method would be called
+	 * addPowerup.
+	 *
 	 * @param b
 	 */
 	public void addBullet(Bullet b) {
@@ -103,6 +105,8 @@ public class Game {
 		ArrayList<Renderable> ret = new ArrayList<Renderable>();
 		ret.addAll(miscRenderables);
 		ret.addAll(bullets);
+
+		ret.removeIf(obj -> obj instanceof OtherShip && ((OtherShip) obj).getAge() > 1000);
 		return ret;
 	}
 }

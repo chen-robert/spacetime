@@ -12,7 +12,7 @@ public interface Serializable {
 
 	/**
 	 * Generates a unique id.
-	 * 
+	 *
 	 * @return id
 	 */
 	public static String generateId() {
@@ -23,30 +23,26 @@ public interface Serializable {
 		return new String(data);
 	}
 
-	String id = generateId();
-
 	/**
-	 * Returns a unique id for this object.
-	 * 
-	 * @return unique id
-	 */
-	public default String getId() {
-		return id;
-	}
-
-	/**
-	 * Returns a representation of the object in bytes. Note that the object must be
-	 * able to be reconstructed from this byte array.
-	 * 
-	 * Specifically, there should be a constructor that takes in a byte array and
-	 * returns the object.
-	 * 
-	 * For example, if the object you are serializing is {@link game.Ship}, there
-	 * should be an additional constructor {@link game.Ship(byte[])}. This will be
-	 * called via java reflection.
-	 * 
+	 * Returns a representation of the object in bytes. Note that the object
+	 * must be able to be reconstructed from this byte array.
+	 *
+	 * Specifically, there should be a constructor that takes in a byte array
+	 * and returns the object.
+	 *
+	 * For example, if the object you are serializing is {@link game.Ship},
+	 * there should be an additional constructor {@link game.Ship(byte[])}. This
+	 * will be called via java reflection.
+	 *
 	 * @return byte array representing the object
 	 */
 	public byte[] toBytes();
+
+	/**
+	 * Returns a unique id for this object.
+	 *
+	 * @return unique id
+	 */
+	public String getId();
 
 }
