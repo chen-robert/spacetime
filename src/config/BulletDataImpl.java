@@ -34,12 +34,12 @@ public class BulletDataImpl implements BulletData {
 
 	@Override
 	public double getRebound() {
-		return 0.9;
+		return -1;
 	}
 
 	@Override
 	public double getWallDrag() {
-		return -1;
+		return 0.01;
 	}
 
 	@Override

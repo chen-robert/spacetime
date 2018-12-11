@@ -63,7 +63,6 @@ public class Bullet extends SerializableObject implements Renderable {
 
 	@Override
 	public Image getImg() {
-		// TODO Auto-generated method stub
 		return bulletdata.getImage();
 	}
 
@@ -158,20 +157,21 @@ public class Bullet extends SerializableObject implements Renderable {
 			velocityX *= -1;
 		}
 
-		if (bulletdata.getRebound() != -1) {// does not pass but bounces
-			boolean[][] hitArray = BackgroundParser.getBackgroundCollisions(480, 360);
-			boolean foundCollision = false;
-			for (int angleIterator = 0; angleIterator < 8; angleIterator++) {
-				double testX = bulletX + bulletdata.getHitboxRadius() * Math.cos(Math.PI / 4 * angleIterator);
-				double testY = bulletY - bulletdata.getHitboxRadius() * Math.sin(Math.PI / 4 * angleIterator);
+		//colliding with the walls
+		boolean[][] hitArray = BackgroundParser.getBackgroundCollisions(480, 360);
+		boolean foundCollision = false;
+		for (int angleIterator = 0; angleIterator < 8; angleIterator++) {
+			double testX = bulletX + bulletdata.getHitboxRadius() * Math.cos(Math.PI / 4 * angleIterator);
+			double testY = bulletY - bulletdata.getHitboxRadius() * Math.sin(Math.PI / 4 * angleIterator);
 
-				if (hitArray[(int) testX][(int) testY]) {
-					foundCollision = true;
-				}
+			if (hitArray[(int) testX][(int) testY]) {
+				foundCollision = true;
 			}
-
+		}
+		
+		if (foundCollision) {
+			if (bulletdata.getRebound() != -1) {// does not pass but bounces
 			// if this screws up, fix the heuristic accordingly
-			if (foundCollision) {
 				int numCollides = 0;
 				boolean[] hasCollides = new boolean[8];
 				for (int angleIterator = 0; angleIterator < 8; angleIterator++) {
@@ -236,8 +236,8 @@ public class Bullet extends SerializableObject implements Renderable {
 				move(-1.0 * adjustment);
 
 				double prevVelocity = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
-				if (Math.abs(velocityX) < 0.2) velocityX = 0;
-				if (Math.abs(velocityY) < 0.2) velocityY = 0;
+				if (Math.abs(velocityX) < 0.05) velocityX = 0;
+				if (Math.abs(velocityY) < 0.05) velocityY = 0;
 				double currentAngle = Math.atan2(0 - velocityY, velocityX);
 				if (currentAngle < 0) currentAngle += 2 * Math.PI;
 				currentAngle = 2 * reflectEstimateR + Math.PI - currentAngle;
@@ -249,64 +249,28 @@ public class Bullet extends SerializableObject implements Renderable {
 					Main.GAME.removeBullet(this);
 					return;
 				}
-			}
-			/*
-			//IMPORTANT:
-			//getRenderX() and Y() are used here in place of (int)X.
-			//It is not to do rendering, etc, only for convenience
-			if (getRenderX() > 0 && getRenderX() < (UI.FIELD_WIDTH-1) && 
-					getRenderY() > 0 && getRenderY() < (UI.FIELD_HEIGHT-1)) {
-				if (BackgroundParser.getBackgroundCollisions(480, 360)[getRenderX()][getRenderY()]) {
-					//the CENTER of our bullet has collided with a wall
-					/**
-					 * an array that iterates on how far we consider the pixels left and right
-					 *
-					int[] xDeltas = new int[] {1, 1, 0, -1, -1, -1, 0, 1};
-					int[] yDeltas = new int[] {0, -1, -1, -1, 0, 1, 1, 1};
-					int touchCount = 0;
-					double averageDegree = 0;
-					for (int i = 0; i < 8; i++) {
-						if (BackgroundParser.getBackgroundCollisions(480, 360)
-								[getRenderX() + xDeltas[i]][getRenderY() + yDeltas[i]]) {
-							touchCount++;
-							averageDegree += 45 * i;
-						}
-					}
-					if (touchCount == 0) {
-						System.err.println("REALLY bad walls");
-						System.exit(-111101111);
-					}
-					
-					averageDegree /= touchCount;
-					double averageRadians = Math.toRadians(averageDegree);
-					
-					move(-1 * adjustment);
-					
+			} else {
+				if (bulletdata.getWallDrag() == -1) {// pops on contact with walls
+					Main.GAME.removeBullet(this);
+					return;
+				} else {// passes through walls; calculate speed loss from walls,
+						// and if <= 0 kill itself
 					double prevVelocity = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
-					if (Math.abs(velocityX) < 0.05) velocityX = 0;
-					if (Math.abs(velocityY) < 0.05) velocityY = 0;
-					double currentAngle = Math.atan2(0 - velocityY, velocityX);
-					if (currentAngle < 0) currentAngle += 2 * Math.PI;
-					currentAngle = 2 * averageRadians + Math.PI - currentAngle;
-					
-					velocityX = prevVelocity * bulletdata.getRebound() * Math.cos(currentAngle);
-					velocityY = -1 * prevVelocity * bulletdata.getRebound() * Math.sin(currentAngle);
-					// if the bullet is too slow to rebound, kill it
-					if (prevVelocity * bulletdata.getRebound() < MIN_REBOUND) {
+					if (prevVelocity < bulletdata.getWallDrag()) {//too slow to continue
 						Main.GAME.removeBullet(this);
+						return;
+					}
+					else {
+						double adjuster = (prevVelocity - bulletdata.getWallDrag())/prevVelocity;
+						velocityX *= adjuster;
+						velocityY *= adjuster;
 					}
 				}
-			}*/
-
-		} else {
-			if (bulletdata.getWallDrag() == -1) {// pops on contact with walls
-				// TODO
-			} else {// passes through walls; calculate speed loss from walls,
-					// and if <= 0 kill
-					// itself
-					// TODO
 			}
+			
 		}
+		
+		
 	}
 
 	private void objectCollide() {
