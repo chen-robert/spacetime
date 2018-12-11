@@ -1,7 +1,7 @@
 package config;
 
-public class BulletDataImpl implements BulletData{
-	
+public class BulletDataImpl implements BulletData {
+
 	@Override
 	public String getName() {
 		return "Red Pellet";
@@ -11,7 +11,7 @@ public class BulletDataImpl implements BulletData{
 	public double getInitialSpeed() {
 		return 1.5;
 	}
-	
+
 	@Override
 	public double getHitboxRadius() {
 		return 2.0;
@@ -31,7 +31,7 @@ public class BulletDataImpl implements BulletData{
 	public String getMovementType() {
 		return "Linear";
 	}
-	
+
 	@Override
 	public double getRebound() {
 		return 0.9;
@@ -45,5 +45,5 @@ public class BulletDataImpl implements BulletData{
 	@Override
 	public double getMaxLifetime() {
 		return 300;
-	}	
+	}
 }

@@ -37,6 +37,7 @@ public class Main {
 
 		boolean debugStep = true;
 		while (true) {
+			long start = System.currentTimeMillis();
 			if (DEBUG) {
 				if (KEY_ADAPTER.isKeyPressed(KeyEvent.VK_V)) {
 					if (debugStep) {
@@ -51,7 +52,9 @@ public class Main {
 			}
 			ui.repaint();
 
-			Thread.sleep(16, 666666);
+			long timeElapsed = System.currentTimeMillis() - start;
+			System.out.printf("Debug: %d ms elapsed%n", timeElapsed);
+			Thread.sleep(Math.max(0, 16 - timeElapsed));
 		}
 	}
 }
