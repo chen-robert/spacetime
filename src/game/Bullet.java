@@ -366,19 +366,18 @@ public class Bullet extends SerializableObject implements Renderable {
 
 	@Override
 	public byte[] toBytes() {
-		return concat(Util.toBytes(name.length()), name.getBytes(), Util.toBytes((int) bulletX),
-				Util.toBytes((int) bulletY), Util.toBytes((int) directionDegrees),
-				Util.toBytes((int) damageMultiplier));
+		return concat(Util.toBytes(name.length()), name.getBytes(), Util.toBytes(bulletX), Util.toBytes(bulletY),
+				Util.toBytes(directionDegrees), Util.toBytes(damageMultiplier));
 	}
 
 	public Bullet(byte[] data) {
 		int nameLen = Util.toInt(data, 0);
 		String name = new String(data, 4, nameLen);
 
-		int bulletX = Util.toInt(data, nameLen + 4);
-		int bulletY = Util.toInt(data, nameLen + 8);
-		int directionDegrees = Util.toInt(data, nameLen + 12);
-		int dm = Util.toInt(data, nameLen + 16);
+		double bulletX = Util.toDouble(data, nameLen + 4 + 8 * 0);
+		double bulletY = Util.toDouble(data, nameLen + 4 + 8 * 1);
+		double directionDegrees = Util.toDouble(data, nameLen + 4 + 8 * 2);
+		double dm = Util.toDouble(data, nameLen + 4 + 8 * 3);
 
 		construct(name, bulletX, bulletY, directionDegrees, dm);
 	}

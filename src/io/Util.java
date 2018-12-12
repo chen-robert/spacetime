@@ -1,5 +1,6 @@
 package io;
 
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 /**
@@ -35,6 +36,20 @@ public class Util {
 		}
 
 		return Util.concat(ret);
+	}
+
+	public static byte[] toBytes(double num) {
+		byte[] bytes = new byte[8];
+		ByteBuffer.wrap(bytes).putDouble(num);
+		return bytes;
+	}
+
+	public static double toDouble(byte[] bytes) {
+		return ByteBuffer.wrap(bytes).getDouble();
+	}
+
+	public static double toDouble(byte[] bytes, int offset) {
+		return toDouble(Arrays.copyOfRange(bytes, offset, offset + 8));
 	}
 
 	public static int toInt(byte[] b, int offset) {
