@@ -29,7 +29,15 @@ public class OtherShip extends SerializableObject implements Renderable {
 		direction = dir;
 		speed = spd;
 	}
+	
+	public double getX() {
+		return renderX;
+	}
 
+	public double getY() {
+		return renderY;
+	}
+	
 	@Override
 	public int getRenderX() {
 		// TODO Auto-generated method stub

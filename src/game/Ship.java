@@ -95,6 +95,9 @@ public class Ship implements Renderable {
 	private void processKeys() {
 		if (Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_LEFT)) direction += craftdata.getTurnSpeed();
 		if (Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_RIGHT)) direction -= craftdata.getTurnSpeed();
+		
+		if (direction > 360) direction -= 360;
+		if (direction < 0) direction += 360;
 
 		if (Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_UP)) {
 			velocityX += craftdata.getAcceleration() * Math.cos(getDirectionRadians());
@@ -123,8 +126,9 @@ public class Ship implements Renderable {
 			velocityY *= speedscaling;
 		}
 
-		if (Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_Z))
+		if (Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_Z)) {
 			Main.GAME.add(new Bullet("Default", shipX, shipY, direction, craftdata.getDamageMultiplier()));
+		}
 	}
 
 	private void collide() {

@@ -3,6 +3,7 @@ package game;
 import static io.Util.concat;
 
 import java.awt.Image;
+import java.util.ArrayList;
 
 import config.BackgroundParser;
 import config.BulletData;
@@ -24,20 +25,22 @@ public class Bullet extends SerializableObject implements Renderable {
 	 */
 	private final double MIN_REBOUND = 0.2;
 
-	public Bullet(String name, double initialX, double initialY, double directionDegrees, double dm) {
-		this.name = name;
-		this.directionDegrees = directionDegrees;
-
-		construct(name, initialX, initialY, directionDegrees, dm);
+	public Bullet(String name, double initialX, double initialY, double initDirDeg, double dm) {
+		construct(name, initialX, initialY, initDirDeg, dm);
 	}
 
-	private void construct(String name, double initialX, double initialY, double directionDegrees, double dm) {
+	private void construct(String name, double initialX, double initialY, double initDirDeg, double dm) {
+		this.name = name;
+		directionDegrees = initDirDeg;
+		wbtick = 0;
+		
 		BulletData bd = DataLoader.getBulletData(name);
 		bulletdata = bd;
 		bulletX = initialX;
 		bulletY = initialY;
-		velocityX = bd.getInitialSpeed() * Math.cos(Math.toRadians(directionDegrees));
-		velocityY = -1 * bd.getInitialSpeed() * Math.sin(Math.toRadians(directionDegrees));
+		velocityX = bd.getInitialSpeed() * Math.cos(Math.toRadians(initDirDeg));
+		velocityY = -1 * bd.getInitialSpeed() * Math.sin(Math.toRadians(initDirDeg));
+		maxSpeed = bd.getMaxSpeed();
 		damageMultiplier = dm;
 		lifetime = bd.getMaxLifetime();
 	}
@@ -48,12 +51,17 @@ public class Bullet extends SerializableObject implements Renderable {
 	private double bulletY;
 	private double velocityX;
 	private double velocityY;
+	private double maxSpeed;
 	private double directionDegrees;
 
 	/**
 	 * Counts down from full. Delete at 0. In ticks.
 	 */
 	private double lifetime;
+	/**
+	 * Counts up from 0. Resets upon wallbounce
+	 */
+	private double wbtick;
 
 	private double damageMultiplier;
 
@@ -86,6 +94,7 @@ public class Bullet extends SerializableObject implements Renderable {
 
 	public void update() {
 		lifetime--;
+		wbtick++;
 		if (lifetime <= 0) {
 			Main.GAME.removeBullet(this);
 			return;
@@ -111,7 +120,7 @@ public class Bullet extends SerializableObject implements Renderable {
 			linearMove(delta);
 			break;
 		case "Homing":
-			// TODO
+			homingMove(delta);
 			break;
 		case "Sinusoid":
 			// TODO
@@ -130,6 +139,61 @@ public class Bullet extends SerializableObject implements Renderable {
 		bulletX += velocityX * delta;
 		bulletY += velocityY * delta;
 	}
+	
+	private void homingMove(double delta) {
+		if (wbtick < 5) {
+			linearMove(delta);
+			return;
+		}
+		
+		ArrayList<OtherShip> targets = new ArrayList<OtherShip>();
+		targets.addAll(Main.GAME.getOtherShips());
+		targets.add(Main.GAME.getShip().getOtherShip());
+		
+		int bestgot = -1;
+		double deviation = 999;
+		for (int i = 0; i < targets.size(); i++) {
+			//in rads
+			double currentAngle = Math.atan2(bulletY - targets.get(i).getY(), targets.get(i).getX() - bulletX);
+			if (currentAngle < 0) currentAngle += 2 * Math.PI;
+			while (directionDegrees < 0)directionDegrees += 360;
+			while (directionDegrees >= 360)directionDegrees -= 360;
+			double directionRadians = Math.toRadians(directionDegrees);
+			double currentDev = Math.abs(directionRadians - currentAngle);
+			if (currentDev < deviation) {
+				bestgot = i;
+				deviation = currentDev;
+			}
+			currentDev = Math.abs(2 * Math.PI + directionRadians - currentAngle);
+			if (currentDev < deviation) {
+				bestgot = i;
+				deviation = currentDev;
+			}
+		}
+		
+		double optimalAngle = Math.atan2(bulletY - targets.get(bestgot).getY(), targets.get(bestgot).getX() - bulletX);
+		if (optimalAngle < 0) optimalAngle += 2 * Math.PI;
+		double directionRadians = Math.toRadians(directionDegrees);
+		if (optimalAngle - directionRadians > Math.PI || 
+				(optimalAngle < directionRadians && directionRadians - optimalAngle < Math.PI)) {
+			//optimal is to turn to the right
+			if (Math.toDegrees(deviation) < 3)directionDegrees = Math.toDegrees(optimalAngle);
+			else directionDegrees -= 3;
+		}else {
+			if (Math.toDegrees(deviation) < 3)directionDegrees = Math.toDegrees(optimalAngle);
+			else directionDegrees += 3;
+		}
+		directionRadians = Math.toRadians(directionDegrees);
+		velocityX = Math.cos(directionRadians) * maxSpeed * (1.0 - 0.2 * deviation/Math.PI);
+		velocityY = -1 * Math.sin(directionRadians) * maxSpeed * (1.0 - 0.2 * deviation/Math.PI);
+		linearMove(delta);
+	}
+	
+	private void velocityUpdatesDirDeg() {
+		if (Math.abs(velocityX) < 0.001) velocityX = 0;
+		if (Math.abs(velocityY) < 0.001) velocityY = 0;
+		directionDegrees = Math.toDegrees(Math.atan2(0 - velocityY, velocityX));
+	}
 
 	private void wallCollide(double adjustment) {
 		// everyone bounces on the border, so let's handle that first
@@ -137,24 +201,32 @@ public class Bullet extends SerializableObject implements Renderable {
 		if (bulletY - bulletdata.getHitboxRadius() < 0) {
 			bulletY = 2 * bulletdata.getHitboxRadius() - bulletY;
 			velocityY *= -1;
+			velocityUpdatesDirDeg();
+			wbtick = 0;
 		}
 
 		// BOTTOM
 		if (bulletY + bulletdata.getHitboxRadius() > (UI.FIELD_HEIGHT-1)) {
 			bulletY = 2 * (UI.FIELD_HEIGHT-1) - 2 * bulletdata.getHitboxRadius() - bulletY;
 			velocityY *= -1;
+			velocityUpdatesDirDeg();
+			wbtick = 0;
 		}
 
 		// LEFT
 		if (bulletX - bulletdata.getHitboxRadius() < 0) {
 			bulletX = 2 * bulletdata.getHitboxRadius() - bulletX;
 			velocityX *= -1;
+			velocityUpdatesDirDeg();
+			wbtick = 0;
 		}
 
 		// RIGHT
 		if (bulletX + bulletdata.getHitboxRadius() > (UI.FIELD_WIDTH-1)) {
 			bulletX = 2 * (UI.FIELD_WIDTH-1) - 2 * bulletdata.getHitboxRadius() - bulletX;
 			velocityX *= -1;
+			velocityUpdatesDirDeg();
+			wbtick = 0;
 		}
 
 		//colliding with the walls
@@ -170,6 +242,7 @@ public class Bullet extends SerializableObject implements Renderable {
 		}
 		
 		if (foundCollision) {
+			wbtick = 0;
 			if (bulletdata.getRebound() != -1) {// does not pass but bounces
 			// if this screws up, fix the heuristic accordingly
 				int numCollides = 0;
@@ -241,9 +314,11 @@ public class Bullet extends SerializableObject implements Renderable {
 				double currentAngle = Math.atan2(0 - velocityY, velocityX);
 				if (currentAngle < 0) currentAngle += 2 * Math.PI;
 				currentAngle = 2 * reflectEstimateR + Math.PI - currentAngle;
+				directionDegrees = Math.toDegrees(currentAngle);
 
 				velocityX = prevVelocity * bulletdata.getRebound() * Math.cos(currentAngle);
 				velocityY = -1 * prevVelocity * bulletdata.getRebound() * Math.sin(currentAngle);
+				
 				// if the BULLET is too slow to rebound, KILL it
 				if (prevVelocity * bulletdata.getRebound() < MIN_REBOUND) {
 					Main.GAME.removeBullet(this);

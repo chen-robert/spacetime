@@ -18,6 +18,11 @@ public interface BulletData {
 	double getInitialSpeed();
 	
 	/**
+	 * @return maximum speed of the bullet
+	 */
+	double getMaxSpeed();
+	
+	/**
 	 * @return radius of the circular hitbox
 	 * if 0, bullet only hits a ship if it enters one
 	 * Note: 0 also screw over wallbounce. Plan accordingly.

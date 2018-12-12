@@ -11,6 +11,11 @@ public class BulletDataImpl implements BulletData {
 	public double getInitialSpeed() {
 		return 1.5;
 	}
+	
+	@Override
+	public double getMaxSpeed() {
+		return 2.0;
+	}
 
 	@Override
 	public double getHitboxRadius() {
@@ -29,17 +34,17 @@ public class BulletDataImpl implements BulletData {
 
 	@Override
 	public String getMovementType() {
-		return "Linear";
+		return "Homing";
 	}
 
 	@Override
 	public double getRebound() {
-		return -1;
+		return 0.9;
 	}
 
 	@Override
 	public double getWallDrag() {
-		return 0.01;
+		return -1;
 	}
 
 	@Override

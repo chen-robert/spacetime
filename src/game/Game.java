@@ -63,8 +63,15 @@ public class Game {
 			bullets.add(b);
 		}
 	}
+	
+	public Ship getShip() {
+		return playerShip;
+	}
 
 	private Collection<OtherShip> otherShips = new ArrayList<>();
+	public Collection<OtherShip> getOtherShips(){
+		return otherShips;
+	}
 
 	public void addOtherShip(OtherShip s) {
 		if (s.getId().equals(Ship.ID)) return;
