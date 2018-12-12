@@ -64,6 +64,8 @@ public class Game {
 		}
 	}
 
+	private Collection<OtherShip> otherShips = new ArrayList<>();
+
 	public void addOtherShip(OtherShip s) {
 		if (s.getId().equals(Ship.ID)) return;
 
@@ -73,6 +75,12 @@ public class Game {
 					.collect(Collectors.toList());
 			dupes.forEach(dupe -> miscRenderables.remove(dupe));
 			miscRenderables.add(s);
+		}
+
+		synchronized (otherShips) {
+			otherShips.removeIf(ship -> ship.getId().equals(s.getId()));
+
+			otherShips.add(s);
 		}
 	}
 
