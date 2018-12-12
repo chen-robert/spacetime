@@ -80,15 +80,24 @@ public class OtherShip extends SerializableObject implements Renderable {
 	}
 
 	public OtherShip(byte[] b) {
-		double x = Util.toDouble(b, 0);
-		double y = Util.toDouble(b, 1 * 8);
-		double dir = Util.toDouble(b, 2 * 8);
-		double spd = Util.toDouble(b, 3 * 8);
+		int offset = 0;
 
-		int strLen = Util.toInt(b, 4 * 8 + 0 * 4);
-		int idLen = Util.toInt(b, 4 * 8 + 1 * 4);
-		String name = new String(b, 6 * 4, strLen);
-		String id = new String(b, 6 * 4 + strLen, idLen);
+		double x = Util.toDouble(b, offset);
+		offset += 8;
+		double y = Util.toDouble(b, offset);
+		offset += 8;
+		double dir = Util.toDouble(b, offset);
+		offset += 8;
+		double spd = Util.toDouble(b, offset);
+		offset += 8;
+
+		int strLen = Util.toInt(b, offset);
+		offset += 4;
+		int idLen = Util.toInt(b, offset);
+		offset += 4;
+		String name = new String(b, offset, strLen);
+		offset += strLen;
+		String id = new String(b, offset, idLen);
 
 		construct(x, y, dir, spd, id, name);
 	}
