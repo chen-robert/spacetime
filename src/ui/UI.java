@@ -45,6 +45,7 @@ public class UI extends JPanel {
 
 		for (Renderable item : items) {
 			Image sprite = item.getImg();
+			if (sprite == null) continue;
 
 			if (item.getDirectionRadians() == 0) {
 				g2d.drawImage(sprite, SIDE_BUFFER + item.getRenderX() - sprite.getWidth(null) / 2,

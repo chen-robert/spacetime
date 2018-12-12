@@ -29,7 +29,7 @@ public class OtherShip extends SerializableObject implements Renderable {
 		direction = dir;
 		speed = spd;
 	}
-	
+
 	public double getX() {
 		return renderX;
 	}
@@ -37,7 +37,7 @@ public class OtherShip extends SerializableObject implements Renderable {
 	public double getY() {
 		return renderY;
 	}
-	
+
 	@Override
 	public int getRenderX() {
 		// TODO Auto-generated method stub
@@ -73,20 +73,20 @@ public class OtherShip extends SerializableObject implements Renderable {
 	@Override
 	public byte[] toBytes() {
 		return Util.concat(//
-				Util.toBytes((int) renderX, (int) renderY, (int) direction, (int) speed), //
+				Util.toBytes(renderX, renderY, direction, speed), //
 				Util.toBytes(name.length(), id.length()), //
 				name.getBytes(), //
 				id.getBytes());
 	}
 
 	public OtherShip(byte[] b) {
-		int x = Util.toInt(b, 0);
-		int y = Util.toInt(b, 1 * 4);
-		int dir = Util.toInt(b, 2 * 4);
-		int spd = Util.toInt(b, 3 * 4);
+		double x = Util.toDouble(b, 0);
+		double y = Util.toDouble(b, 1 * 8);
+		double dir = Util.toDouble(b, 2 * 8);
+		double spd = Util.toDouble(b, 3 * 8);
 
-		int strLen = Util.toInt(b, 4 * 4);
-		int idLen = Util.toInt(b, 5 * 4);
+		int strLen = Util.toInt(b, 4 * 8 + 0 * 4);
+		int idLen = Util.toInt(b, 4 * 8 + 1 * 4);
 		String name = new String(b, 6 * 4, strLen);
 		String id = new String(b, 6 * 4 + strLen, idLen);
 

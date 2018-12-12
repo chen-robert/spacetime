@@ -44,6 +44,15 @@ public class Util {
 		return bytes;
 	}
 
+	public static byte[] toBytes(double... nums) {
+		byte[][] ret = new byte[nums.length][];
+		for (int i = 0; i < nums.length; i++) {
+			ret[i] = Util.toBytes(nums[i]);
+		}
+
+		return Util.concat(ret);
+	}
+
 	public static double toDouble(byte[] bytes) {
 		return ByteBuffer.wrap(bytes).getDouble();
 	}
