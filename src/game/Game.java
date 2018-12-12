@@ -2,6 +2,7 @@ package game;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 import config.BackgroundParser;
@@ -17,19 +18,19 @@ public class Game {
 
 	ImageLoader imageloader;
 
-	private ArrayList<Renderable> miscRenderables;
+	private Collection<Renderable> miscRenderables;
 
 	private Ship playerShip;
-	private ArrayList<Bullet> bullets;
-	private ArrayList<Bullet> toRemove = new ArrayList<>();
+	private Collection<Bullet> bullets;
+	private Collection<Bullet> toRemove = new ArrayList<>();
 
 	private GameStateListener gsl;
 
 	public Game(GameStateListener gsl) {
 		imageloader = new ImageLoader();
-		miscRenderables = new ArrayList<Renderable>();
+		miscRenderables = Collections.synchronizedList(new ArrayList<>());
 		playerShip = new Ship(new CraftDataImpl());
-		bullets = new ArrayList<Bullet>();
+		bullets = Collections.synchronizedList(new ArrayList<Bullet>());
 		miscRenderables.add(playerShip);
 		miscRenderables.add(BackgroundParser.getBackgroundSprite(480, 360));
 
@@ -41,8 +42,7 @@ public class Game {
 	 * Generic "fake add" method where we call
 	 * {@link GameStateListener#addObject(networking.Serializable)}.
 	 *
-	 * @param obj
-	 *            any serializable object
+	 * @param obj any serializable object
 	 */
 	public void add(Serializable obj) {
 		gsl.addObject(obj);
@@ -52,9 +52,8 @@ public class Game {
 	 * Add a bullet. This will be called by {@link GameStateListener} through
 	 * reflection.
 	 *
-	 * Note, ensure the method name is strictly "add" + className. For example,
-	 * if we wanted to make a Powerup class, our new method would be called
-	 * addPowerup.
+	 * Note, ensure the method name is strictly "add" + className. For example, if
+	 * we wanted to make a Powerup class, our new method would be called addPowerup.
 	 *
 	 * @param b
 	 */
@@ -63,13 +62,14 @@ public class Game {
 			bullets.add(b);
 		}
 	}
-	
+
 	public Ship getShip() {
 		return playerShip;
 	}
 
-	private Collection<OtherShip> otherShips = new ArrayList<>();
-	public Collection<OtherShip> getOtherShips(){
+	private Collection<OtherShip> otherShips = Collections.synchronizedList(new ArrayList<>());
+
+	public Collection<OtherShip> getOtherShips() {
 		return otherShips;
 	}
 
