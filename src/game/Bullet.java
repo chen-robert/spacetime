@@ -32,7 +32,7 @@ public class Bullet extends SerializableObject implements Renderable {
 	private void construct(String name, double initialX, double initialY, double initDirDeg, double dm) {
 		this.name = name;
 		directionDegrees = initDirDeg;
-		wbtick = 0;
+		wbtick = -20;
 		
 		BulletData bd = DataLoader.getBulletData(name);
 		bulletdata = bd;
@@ -174,18 +174,24 @@ public class Bullet extends SerializableObject implements Renderable {
 		double optimalAngle = Math.atan2(bulletY - targets.get(bestgot).getY(), targets.get(bestgot).getX() - bulletX);
 		if (optimalAngle < 0) optimalAngle += 2 * Math.PI;
 		double directionRadians = Math.toRadians(directionDegrees);
+		double distToTarget = Math.hypot(bulletX - targets.get(bestgot).getX(), bulletY - targets.get(bestgot).getY());
+		double turnamount = 3.0 + 20.0/(distToTarget/maxSpeed);
 		if (optimalAngle - directionRadians > Math.PI || 
 				(optimalAngle < directionRadians && directionRadians - optimalAngle < Math.PI)) {
 			//optimal is to turn to the right
-			if (Math.toDegrees(deviation) < 3)directionDegrees = Math.toDegrees(optimalAngle);
-			else directionDegrees -= 3;
+			if (Math.toDegrees(deviation) < turnamount)directionDegrees = Math.toDegrees(optimalAngle);
+			else directionDegrees -= turnamount;
 		}else {
-			if (Math.toDegrees(deviation) < 3)directionDegrees = Math.toDegrees(optimalAngle);
-			else directionDegrees += 3;
+			if (Math.toDegrees(deviation) < turnamount)directionDegrees = Math.toDegrees(optimalAngle);
+			else directionDegrees += turnamount;
 		}
 		directionRadians = Math.toRadians(directionDegrees);
-		velocityX = Math.cos(directionRadians) * maxSpeed * (1.0 - 0.2 * deviation/Math.PI);
-		velocityY = -1 * Math.sin(directionRadians) * maxSpeed * (1.0 - 0.2 * deviation/Math.PI);
+		velocityX = Math.cos(directionRadians) * maxSpeed * (1.0 - 0.4 * deviation/Math.PI);
+		velocityY = -1 * Math.sin(directionRadians) * maxSpeed * (1.0 - 0.4 * deviation/Math.PI);
+		//if (deviation > Math.PI/10 && distToTarget < 20 * maxSpeed) {
+		//	velocityX *= (1.0 - 0.4 * deviation/Math.PI);
+		//	velocityY *= (1.0 - 0.4 * deviation/Math.PI);
+		//}
 		linearMove(delta);
 	}
 	
