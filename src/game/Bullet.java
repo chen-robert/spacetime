@@ -11,9 +11,11 @@ import config.DataLoader;
 import io.Util;
 import main.Main;
 import networking.SerializableObject;
+import networking.Serialize;
 import ui.Renderable;
 import ui.UI;
 
+@Serialize(fields = { "bulletX" })
 public class Bullet extends SerializableObject implements Renderable {
 	// HARDCODED VARIABLES
 	/**
@@ -26,6 +28,9 @@ public class Bullet extends SerializableObject implements Renderable {
 	private final double MIN_REBOUND = 0.2;
 
 	private String parentId;
+
+	public Bullet() {
+	}
 
 	public Bullet(String name, String id, double initialX, double initialY, double initDirDeg, double dm) {
 		construct(name, id, initialX, initialY, initDirDeg, dm);
