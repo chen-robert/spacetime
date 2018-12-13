@@ -152,6 +152,17 @@ public class Bullet extends SerializableObject implements Renderable {
 		ArrayList<OtherShip> targets = new ArrayList<OtherShip>();
 		targets.addAll(Main.GAME.getOtherShips());
 		targets.add(Main.GAME.getShip().getOtherShip());
+		for (int i = 0; i < targets.size(); i++) {
+			if (targets.get(i).getId().equals(parentId)) {
+				targets.remove(i);
+				i--;
+			}
+		}
+		
+		if (targets.size() == 0) {
+			linearMove(delta);
+			return;
+		}
 
 		int bestgot = -1;
 		double deviation = 999;
