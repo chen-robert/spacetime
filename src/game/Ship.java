@@ -14,7 +14,8 @@ public class Ship implements Renderable {
 	public static final String ID = Serializable.generateId();
 
 	private static final int COLLISION_ACCURACY = 20;
-	private static final double MIN_REBOUND = 0.1;// if traveling slower, no rebound
+	private static final double MIN_REBOUND = 0.1;// if traveling slower, no
+													// rebound
 
 	public Ship() {
 	}
@@ -95,7 +96,7 @@ public class Ship implements Renderable {
 	private void processKeys() {
 		if (Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_LEFT)) direction += craftdata.getTurnSpeed();
 		if (Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_RIGHT)) direction -= craftdata.getTurnSpeed();
-		
+
 		if (direction > 360) direction -= 360;
 		if (direction < 0) direction += 360;
 
@@ -127,7 +128,7 @@ public class Ship implements Renderable {
 		}
 
 		if (Main.KEY_ADAPTER.isKeyPressed(KeyEvent.VK_Z)) {
-			Main.GAME.add(new Bullet("Default", shipX, shipY, direction, craftdata.getDamageMultiplier()));
+			Main.GAME.add(new Bullet("Default", Ship.ID, shipX, shipY, direction, craftdata.getDamageMultiplier()));
 		}
 	}
 
@@ -140,8 +141,8 @@ public class Ship implements Renderable {
 		}
 
 		// BOTTOM
-		if (shipY + craftdata.getHitboxRadius() > (UI.FIELD_HEIGHT-1)) {
-			shipY = 2 * (UI.FIELD_HEIGHT-1) - 2 * craftdata.getHitboxRadius() - shipY;
+		if (shipY + craftdata.getHitboxRadius() > (UI.FIELD_HEIGHT - 1)) {
+			shipY = 2 * (UI.FIELD_HEIGHT - 1) - 2 * craftdata.getHitboxRadius() - shipY;
 			velocityX *= craftdata.getRebound();
 			velocityY *= -1 * craftdata.getRebound();
 		}
@@ -155,7 +156,7 @@ public class Ship implements Renderable {
 
 		// RIGHT
 		if (shipX + craftdata.getHitboxRadius() > UI.FIELD_WIDTH) {
-			shipX = 2 * (UI.FIELD_WIDTH-1) - 2 * craftdata.getHitboxRadius() - shipX;
+			shipX = 2 * (UI.FIELD_WIDTH - 1) - 2 * craftdata.getHitboxRadius() - shipX;
 			velocityX *= -1 * craftdata.getRebound();
 			velocityY *= craftdata.getRebound();
 		}
@@ -199,8 +200,9 @@ public class Ship implements Renderable {
 				break;
 			case 2:
 				/*
-				 * for (int i = 0; i < 4; i++) { if (hasCollides[2 * i + 1]) reflectEstimateD =
-				 * 45 + 90 * i; } if (reflectEstimateD == -1) {
+				 * for (int i = 0; i < 4; i++) { if (hasCollides[2 * i + 1])
+				 * reflectEstimateD = 45 + 90 * i; } if (reflectEstimateD == -1)
+				 * {
 				 */
 				double suma = 0;
 				for (int j = 0; j < 8; j++)

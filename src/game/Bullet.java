@@ -25,12 +25,15 @@ public class Bullet extends SerializableObject implements Renderable {
 	 */
 	private final double MIN_REBOUND = 0.2;
 
-	public Bullet(String name, double initialX, double initialY, double initDirDeg, double dm) {
-		construct(name, initialX, initialY, initDirDeg, dm);
+	private String parentId;
+
+	public Bullet(String name, String id, double initialX, double initialY, double initDirDeg, double dm) {
+		construct(name, id, initialX, initialY, initDirDeg, dm);
 	}
 
-	private void construct(String name, double initialX, double initialY, double initDirDeg, double dm) {
+	private void construct(String name, String id, double initialX, double initialY, double initDirDeg, double dm) {
 		this.name = name;
+		this.parentId = id;
 		directionDegrees = initDirDeg;
 		wbtick = -20;
 
@@ -284,8 +287,9 @@ public class Bullet extends SerializableObject implements Renderable {
 					break;
 				case 2:
 					/*
-					 * for (int i = 0; i < 4; i++) { if (hasCollides[2 * i + 1]) reflectEstimateD =
-					 * 45 + 90 * i; } if (reflectEstimateD == -1) {
+					 * for (int i = 0; i < 4; i++) { if (hasCollides[2 * i + 1])
+					 * reflectEstimateD = 45 + 90 * i; } if (reflectEstimateD ==
+					 * -1) {
 					 */
 					double suma = 0;
 					for (int j = 0; j < 8; j++)
@@ -337,13 +341,16 @@ public class Bullet extends SerializableObject implements Renderable {
 					return;
 				}
 			} else {
-				if (bulletdata.getWallDrag() == -1) {// pops on contact with walls
+				if (bulletdata.getWallDrag() == -1) {// pops on contact with
+														// walls
 					Main.GAME.removeBullet(this);
 					return;
-				} else {// passes through walls; calculate speed loss from walls,
+				} else {// passes through walls; calculate speed loss from
+						// walls,
 						// and if <= 0 kill itself
 					double prevVelocity = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
-					if (prevVelocity < bulletdata.getWallDrag()) {// too slow to continue
+					if (prevVelocity < bulletdata.getWallDrag()) {// too slow to
+																	// continue
 						Main.GAME.removeBullet(this);
 						return;
 					} else {
@@ -366,19 +373,36 @@ public class Bullet extends SerializableObject implements Renderable {
 
 	@Override
 	public byte[] toBytes() {
-		return concat(Util.toBytes(name.length()), name.getBytes(), Util.toBytes(bulletX), Util.toBytes(bulletY),
-				Util.toBytes(directionDegrees), Util.toBytes(damageMultiplier));
+		return concat(Util.toBytes(name.length()), name.getBytes(), Util.toBytes(parentId.length()),
+				parentId.getBytes(), Util.toBytes(bulletX), Util.toBytes(bulletY), Util.toBytes(directionDegrees),
+				Util.toBytes(damageMultiplier));
+	}
+
+	public String getParentId() {
+		return parentId;
 	}
 
 	public Bullet(byte[] data) {
-		int nameLen = Util.toInt(data, 0);
-		String name = new String(data, 4, nameLen);
+		int offset = 0;
 
-		double bulletX = Util.toDouble(data, nameLen + 4 + 8 * 0);
-		double bulletY = Util.toDouble(data, nameLen + 4 + 8 * 1);
-		double directionDegrees = Util.toDouble(data, nameLen + 4 + 8 * 2);
-		double dm = Util.toDouble(data, nameLen + 4 + 8 * 3);
+		int nameLen = Util.toInt(data, offset);
+		offset += 4;
+		String name = new String(data, offset, nameLen);
+		offset += nameLen;
+		int idLen = Util.toInt(data, offset);
+		offset += 4;
+		String id = new String(data, offset, idLen);
+		offset += idLen;
 
-		construct(name, bulletX, bulletY, directionDegrees, dm);
+		double bulletX = Util.toDouble(data, offset);
+		offset += 8;
+		double bulletY = Util.toDouble(data, offset);
+		offset += 8;
+		double directionDegrees = Util.toDouble(data, offset);
+		offset += 8;
+		double dm = Util.toDouble(data, offset);
+		offset += 8;
+
+		construct(name, id, bulletX, bulletY, directionDegrees, dm);
 	}
 }
