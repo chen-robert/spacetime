@@ -3,7 +3,6 @@ package game;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.stream.Collectors;
 
 import config.BackgroundParser;
 import config.CraftDataImpl;
@@ -38,11 +37,22 @@ public class Game {
 		gsl.bind(this);
 	}
 
+	private void updateAllBullets() {
+		synchronized (bullets) {
+			for (Bullet bullet : bullets) {
+				if (bullet.getParentId().equals(Ship.ID)) {
+					gsl.addObject(bullet);
+				}
+			}
+		}
+	}
+
 	/**
 	 * Generic "fake add" method where we call
 	 * {@link GameStateListener#addObject(networking.Serializable)}.
 	 *
-	 * @param obj any serializable object
+	 * @param obj
+	 *            any serializable object
 	 */
 	public void add(Serializable obj) {
 		gsl.addObject(obj);
@@ -52,13 +62,15 @@ public class Game {
 	 * Add a bullet. This will be called by {@link GameStateListener} through
 	 * reflection.
 	 *
-	 * Note, ensure the method name is strictly "add" + className. For example, if
-	 * we wanted to make a Powerup class, our new method would be called addPowerup.
+	 * Note, ensure the method name is strictly "add" + className. For example,
+	 * if we wanted to make a Powerup class, our new method would be called
+	 * addPowerup.
 	 *
 	 * @param b
 	 */
 	public void addBullet(Bullet b) {
 		synchronized (bullets) {
+			bullets.removeIf(bullet -> bullet.getId().equals(b.getId()));
 			bullets.add(b);
 		}
 	}
@@ -77,10 +89,7 @@ public class Game {
 		if (s.getId().equals(Ship.ID)) return;
 
 		synchronized (miscRenderables) {
-			Collection<Renderable> dupes = miscRenderables.stream()
-					.filter(r -> r instanceof OtherShip && ((OtherShip) r).getId().equals(s.getId()))
-					.collect(Collectors.toList());
-			dupes.forEach(dupe -> miscRenderables.remove(dupe));
+			miscRenderables.removeIf(r -> r instanceof OtherShip && ((OtherShip) r).getId().equals(s.getId()));
 			miscRenderables.add(s);
 		}
 
