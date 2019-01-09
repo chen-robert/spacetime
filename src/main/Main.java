@@ -53,7 +53,7 @@ public class Main {
 			ui.repaint();
 
 			long timeElapsed = System.currentTimeMillis() - start;
-			//System.out.printf("Debug: %d ms elapsed%n", timeElapsed);
+//			System.out.printf("Debug: %d ms elapsed%n", timeElapsed);
 			Thread.sleep(Math.max(0, 16 - timeElapsed));
 		}
 	}
