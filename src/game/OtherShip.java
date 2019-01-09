@@ -5,8 +5,10 @@ import java.awt.Image;
 import config.ImageLoader;
 import io.Util;
 import networking.SerializableObject;
+import networking.Serialize;
 import ui.Renderable;
 
+@Serialize(fields = { "name", "renderX", "renderY", "direction", "speed", "id" })
 public class OtherShip extends SerializableObject implements Renderable {
 	private Image selfImage;
 	private double renderX, renderY;
@@ -16,11 +18,6 @@ public class OtherShip extends SerializableObject implements Renderable {
 
 	public OtherShip(double x, double y, double dir, double spd, String id, String name) {
 		this.name = name;
-
-		construct(x, y, dir, spd, id, name);
-	}
-
-	private void construct(double x, double y, double dir, double spd, String id, String name) {
 		this.id = id;
 
 		selfImage = ImageLoader.getImg(name + "-e");
@@ -28,6 +25,9 @@ public class OtherShip extends SerializableObject implements Renderable {
 		renderY = y;
 		direction = dir;
 		speed = spd;
+	}
+
+	public OtherShip() {
 	}
 
 	public double getX() {
@@ -66,7 +66,7 @@ public class OtherShip extends SerializableObject implements Renderable {
 
 	@Override
 	public Image getImg() {
-		// TODO Auto-generated method stub
+		if (selfImage == null) selfImage = ImageLoader.getImg(name + "-e");
 		return selfImage;
 	}
 
@@ -98,8 +98,6 @@ public class OtherShip extends SerializableObject implements Renderable {
 		String name = new String(b, offset, strLen);
 		offset += strLen;
 		String id = new String(b, offset, idLen);
-
-		construct(x, y, dir, spd, id, name);
 	}
 
 	@Override

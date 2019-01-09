@@ -1,9 +1,8 @@
 package game;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
-import networking.Serializable;
+import networking.ObjectSerializer;
 import networking.client.Client;
 
 public class GameStateListenerImpl implements GameStateListener {
@@ -20,8 +19,8 @@ public class GameStateListenerImpl implements GameStateListener {
 	}
 
 	@Override
-	public void addObject(Serializable obj) {
-		client.write(obj.getClass().getName(), obj.toBytes());
+	public void addObject(Object obj) {
+		client.write(obj.getClass().getName(), ObjectSerializer.serialize(obj));
 	}
 
 	public void onLoad(String className, byte[] data) {
@@ -29,9 +28,8 @@ public class GameStateListenerImpl implements GameStateListener {
 		try {
 			String simpleName = className.substring(className.lastIndexOf('.') + 1);
 			Method addObj = game.getClass().getMethod("add" + simpleName, Class.forName(className));
-			Constructor<?> construct = Class.forName(className).getConstructor(byte[].class);
 
-			Object obj = construct.newInstance(data);
+			Object obj = ObjectSerializer.deserialize(data);
 
 			addObj.invoke(game, obj);
 		} catch (ReflectiveOperationException e) {

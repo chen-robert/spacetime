@@ -1,5 +1,6 @@
 package networking;
 
+@Serialize(fields = { "ID" })
 public abstract class SerializableObject implements Serializable {
 	final String ID = Serializable.generateId();
 	final long INIT_TIME = System.currentTimeMillis();

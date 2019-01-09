@@ -15,17 +15,17 @@ import networking.Serialize;
 import ui.Renderable;
 import ui.UI;
 
-@Serialize(fields = { "bulletX" })
+@Serialize(fields = { "bulletX", "bulletY", "velocityX", "velocityY", "directionDegrees", "maxSpeed", "parentId" })
 public class Bullet extends SerializableObject implements Renderable {
 	// HARDCODED VARIABLES
 	/**
 	 * how far at max each bullet goes
 	 */
-	private final double COLLISION_STEP = 1.0;
+	private static final double COLLISION_STEP = 1.0;
 	/**
 	 * the minimum speed a bullet can go to rebound
 	 */
-	private final double MIN_REBOUND = 0.2;
+	private static final double MIN_REBOUND = 0.2;
 
 	private String parentId;
 
@@ -163,7 +163,7 @@ public class Bullet extends SerializableObject implements Renderable {
 				i--;
 			}
 		}
-		
+
 		if (targets.size() == 0) {
 			linearMove(delta);
 			return;
@@ -303,9 +303,8 @@ public class Bullet extends SerializableObject implements Renderable {
 					break;
 				case 2:
 					/*
-					 * for (int i = 0; i < 4; i++) { if (hasCollides[2 * i + 1])
-					 * reflectEstimateD = 45 + 90 * i; } if (reflectEstimateD ==
-					 * -1) {
+					 * for (int i = 0; i < 4; i++) { if (hasCollides[2 * i + 1]) reflectEstimateD =
+					 * 45 + 90 * i; } if (reflectEstimateD == -1) {
 					 */
 					double suma = 0;
 					for (int j = 0; j < 8; j++)
