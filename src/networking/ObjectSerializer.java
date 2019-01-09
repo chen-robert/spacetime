@@ -6,7 +6,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
-import game.Bullet;
 import io.Util;
 
 public class ObjectSerializer {
@@ -135,10 +134,5 @@ public class ObjectSerializer {
 
 		return null;
 
-	}
-
-	public static void main(String args[]) {
-		byte[] b = serialize(new Bullet("asdf", "bcdf", 1, 1234, 23, 43));
-		System.out.println(((Bullet) deserialize(b)).getRenderX());
 	}
 }
