@@ -34,7 +34,7 @@ public class BulletDataImpl implements BulletData {
 
 	@Override
 	public String getMovementType() {
-		return "Homing";
+		return "Controlled";
 	}
 
 	@Override
