@@ -3,6 +3,7 @@ package networking;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 
 import game.Bullet;
@@ -118,6 +119,13 @@ public class ObjectSerializer {
 						curr = curr.getSuperclass();
 					}
 				}
+			}
+
+			try {
+				Method init = obj.getClass().getMethod("serializationInit");
+				init.invoke(obj);
+			} catch (ReflectiveOperationException rfe) {
+				// Ignore if the object has no init method
 			}
 
 			return obj;

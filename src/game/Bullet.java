@@ -16,7 +16,8 @@ import networking.Serialize;
 import ui.Renderable;
 import ui.UI;
 
-@Serialize(fields = { "bulletX", "bulletY", "velocityX", "velocityY", "directionDegrees", "maxSpeed", "parentId" })
+@Serialize(fields = { "bulletX", "bulletY", "velocityX", "velocityY", "directionDegrees", "maxSpeed", "parentId",
+		"lifetime" })
 public class Bullet extends SerializableObject implements Renderable {
 	// HARDCODED VARIABLES
 	/**
@@ -37,7 +38,12 @@ public class Bullet extends SerializableObject implements Renderable {
 		construct(name, parentId, initialX, initialY, initDirDeg, dm);
 	}
 
-	private void construct(String name, String parentId, double initialX, double initialY, double initDirDeg, double dm) {
+	public void serializationInit() {
+		bulletdata = DataLoader.getBulletData(name);
+	}
+
+	private void construct(String name, String parentId, double initialX, double initialY, double initDirDeg,
+			double dm) {
 		this.name = name;
 		this.parentId = parentId;
 		directionDegrees = initDirDeg;
@@ -378,7 +384,7 @@ public class Bullet extends SerializableObject implements Renderable {
 			}
 		}
 	}
-	
+
 	private void controlledMove(double delta) {
 		if (wbtick < 5) {
 			linearMove(delta);
@@ -386,8 +392,7 @@ public class Bullet extends SerializableObject implements Renderable {
 		}
 		if (parentId.equals(Main.GAME.getShip().ID)) {
 			directionDegrees = Main.GAME.getShip().getDirectionDegrees();
-		}
-		else {
+		} else {
 			Iterator<OtherShip> finders = Main.GAME.getOtherShips().iterator();
 			while (finders.hasNext()) {
 				OtherShip otherkin = finders.next();
@@ -397,13 +402,11 @@ public class Bullet extends SerializableObject implements Renderable {
 				}
 			}
 			/*
-			for (int i = 0; i < Main.GAME.getOtherShips().size(); i++) {
-				if(Main.GAME.getOtherShipsArray().get(i).getId().equals(parentId)) {
-					directionDegrees = (Main.GAME.getOtherShips()..get(i).getDirectionDegrees();
-					break;
-				}
-			}
-			*/
+			 * for (int i = 0; i < Main.GAME.getOtherShips().size(); i++) {
+			 * if(Main.GAME.getOtherShipsArray().get(i).getId().equals(parentId)) {
+			 * directionDegrees = (Main.GAME.getOtherShips()..get(i).getDirectionDegrees();
+			 * break; } }
+			 */
 		}
 		velocityX = bulletdata.getInitialSpeed() * Math.cos(Math.toRadians(directionDegrees));
 		velocityY = -1 * bulletdata.getInitialSpeed() * Math.sin(Math.toRadians(directionDegrees));
