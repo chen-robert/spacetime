@@ -17,7 +17,7 @@ import ui.Renderable;
 import ui.UI;
 
 @Serialize(fields = { "bulletX", "bulletY", "velocityX", "velocityY", "directionDegrees", "maxSpeed", "parentId",
-		"lifetime" })
+		"lifetime", "wbtick" })
 public class Bullet extends SerializableObject implements Renderable {
 	// HARDCODED VARIABLES
 	/**
